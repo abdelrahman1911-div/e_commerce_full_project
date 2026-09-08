@@ -209,5 +209,8 @@
     "current_password_hint": "Enter your current password",
     "new_password_hint": "Please Enter your new password",
     "verify_new_password_hint": "Verify ur new password",
-    "create_account": "Create your Account"
+    "create_account": "Create your Account", 
+    "personal_information.email" : "Email", 
+    "personal_information.phone_number" : "Your phone number", 
+    "personal_information.address" : "Your address"
 }
