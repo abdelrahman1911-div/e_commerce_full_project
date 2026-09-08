@@ -144,32 +144,11 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         // ========================================================
         // TextField
         // ========================================================
-        Container(
+        SizedBox(
           height: 40.h,
-
-          clipBehavior: Clip.antiAlias,
-
-          decoration: BoxDecoration(
-            color:
-                widget.backgroundColor ?? theme.inputDecorationTheme.fillColor,
-
-            borderRadius: widget.borderRadius ?? BorderRadius.circular(16.r),
-
-            border: Border.all(
-              color: hasError
-                  ? colorScheme.error
-                  : _isFocused
-                  ? colorScheme.onSurface
-                  : colorScheme.surface,
-              width: 0.1,
-            ),
-          ),
-
           child: TextFormField(
             focusNode: _focusNode,
-
             controller: widget.controller,
-
             validator: widget.validator,
 
             onTapOutside: (event) {
@@ -183,6 +162,15 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             style: theme.textTheme.bodyLarge,
 
             decoration: InputDecoration(
+              // ==================================================
+              // Background
+              // ==================================================
+              filled: true,
+
+              fillColor:
+                  widget.backgroundColor ??
+                  theme.inputDecorationTheme.fillColor,
+
               // ==================================================
               // Prefix Icon / Password Icon
               // ==================================================
@@ -200,9 +188,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                         _obscureText
                             ? Icons.lock_outline
                             : Icons.lock_open_outlined,
-
                         color: colorScheme.onSurfaceVariant,
-
                         size: 20.sp,
                       ),
 
@@ -226,7 +212,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                   : null,
 
               // ==================================================
-              // Hide Flutter's Default Error
+              // Hide Flutter Default Error
               // ==================================================
               errorStyle: const TextStyle(fontSize: 0, height: 0),
 
@@ -250,22 +236,64 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
               hintStyle: theme.inputDecorationTheme.hintStyle,
 
               // ==================================================
-              // Remove Default Border
+              // Normal Border
               // ==================================================
-              border: InputBorder.none,
+              enabledBorder: OutlineInputBorder(
+                borderRadius:
+                    widget.borderRadius ?? BorderRadius.circular(16.r),
+
+                borderSide: BorderSide(
+                  color: _isFocused
+                      ? colorScheme.onSurface
+                      : colorScheme.surface,
+                  width: 0.1,
+                ),
+              ),
+
+              // ==================================================
+              // Focused Border
+              // ==================================================
+              focusedBorder: OutlineInputBorder(
+                borderRadius:
+                    widget.borderRadius ?? BorderRadius.circular(16.r),
+
+                borderSide: BorderSide(
+                  color: colorScheme.onSurface,
+                  width: 0.1,
+                ),
+              ),
+
+              // ==================================================
+              // Error Border
+              // ==================================================
+              errorBorder: OutlineInputBorder(
+                borderRadius:
+                    widget.borderRadius ?? BorderRadius.circular(16.r),
+
+                borderSide: BorderSide(color: colorScheme.error, width: 1),
+              ),
+
+              // ==================================================
+              // Focused Error Border
+              // ==================================================
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius:
+                    widget.borderRadius ?? BorderRadius.circular(16.r),
+
+                borderSide: BorderSide(color: colorScheme.error, width: 1),
+              ),
             ),
           ),
         ),
 
-        // ============================================================
+        // ========================================================
         // Error Text
-        // ============================================================
+        // ========================================================
         if (hasError) ...[
           SizedBox(height: 6.h),
 
           Text(
             widget.errorText!,
-
             style: theme.textTheme.bodyMedium!.copyWith(
               color: colorScheme.error,
               fontSize: 12.sp,
