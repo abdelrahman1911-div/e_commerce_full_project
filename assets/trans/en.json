@@ -214,5 +214,6 @@
     "personal_information.phone_number" : "Your phone number", 
     "personal_information.address" : "Your address", 
     "personal_information.save_changes" : "Save Your Personal Info",  
-    "personal_information.edit_information" : "Edit Your Personal Info"
+    "personal_information.edit_information" : "Edit Your Personal Info", 
+    "personal_information.updated_successfully" : "Personal Information Updated Successfully"
 }
