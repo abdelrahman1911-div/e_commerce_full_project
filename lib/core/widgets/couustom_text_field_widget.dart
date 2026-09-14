@@ -14,6 +14,7 @@ class CustomTextFieldWidget extends StatefulWidget {
   final Color? backgroundColor;
   final BorderRadius? borderRadius;
   final bool isSearchTextField;
+  final TextInputType? keyboardType;
 
   const CustomTextFieldWidget({
     super.key,
@@ -28,6 +29,7 @@ class CustomTextFieldWidget extends StatefulWidget {
     this.backgroundColor,
     this.borderRadius,
     this.isSearchTextField = false,
+    this.keyboardType,
   });
 
   @override
@@ -45,7 +47,6 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
     super.initState();
 
     _focusNode = FocusNode();
-
     _focusNode.addListener(_onFocusChange);
 
     _obscureText = widget.isPassword;
@@ -72,7 +73,8 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final hasError = widget.errorText != null && widget.errorText!.isNotEmpty;
+    final bool hasCustomError =
+        widget.errorText != null && widget.errorText!.isNotEmpty;
 
     // ============================================================
     // Search TextField
@@ -94,13 +96,13 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         child: TextFormField(
           controller: widget.controller,
           validator: widget.validator,
+          keyboardType: widget.keyboardType,
 
           onTapOutside: (event) {
             FocusScope.of(context).unfocus();
           },
 
           textAlignVertical: TextAlignVertical.center,
-
           style: theme.textTheme.bodyLarge,
 
           decoration: InputDecoration(
@@ -124,32 +126,25 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         ),
       );
     }
-
-    // ============================================================
-    // Normal TextField
-    // ============================================================
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ========================================================
-        // Label
-        // ========================================================
         if (widget.label != null && widget.label!.isNotEmpty)
           Text(widget.label!, style: AppTextStyles.fieldLabel(context)),
 
         if (widget.label != null && widget.label!.isNotEmpty)
           SizedBox(height: 7.h),
 
-        // ========================================================
-        // TextField
-        // ========================================================
         SizedBox(
           height: 40.h,
           child: TextFormField(
-            focusNode: _focusNode,
             controller: widget.controller,
+
+            focusNode: _focusNode,
+
             validator: widget.validator,
+
+            keyboardType: widget.keyboardType,
 
             onTapOutside: (event) {
               FocusScope.of(context).unfocus();
@@ -162,18 +157,10 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             style: theme.textTheme.bodyLarge,
 
             decoration: InputDecoration(
-              // ==================================================
-              // Background
-              // ==================================================
               filled: true,
-
               fillColor:
                   widget.backgroundColor ??
                   theme.inputDecorationTheme.fillColor,
-
-              // ==================================================
-              // Prefix Icon / Password Icon
-              // ==================================================
               prefixIcon: widget.isPassword
                   ? IconButton(
                       padding: EdgeInsets.zero,
@@ -199,10 +186,6 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                       },
                     )
                   : widget.icon,
-
-              // ==================================================
-              // Prefix Icon Constraints
-              // ==================================================
               prefixIconConstraints: (widget.icon != null || widget.isPassword)
                   ? BoxConstraints(
                       minWidth: 44.w,
@@ -210,34 +193,22 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                       maxHeight: 40.h,
                     )
                   : null,
+              errorStyle: TextStyle(
+                fontSize: 11.sp,
+                height: 0.6,
+                color: colorScheme.error,
+              ),
 
-              // ==================================================
-              // Hide Flutter Default Error
-              // ==================================================
-              errorStyle: const TextStyle(fontSize: 0, height: 0),
-
-              // ==================================================
-              // TextField Density
-              // ==================================================
               isDense: true,
 
-              // ==================================================
-              // Content Padding
-              // ==================================================
               contentPadding: (widget.icon != null || widget.isPassword)
                   ? EdgeInsets.zero
                   : EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
 
-              // ==================================================
-              // Hint
-              // ==================================================
               hintText: widget.hintText,
 
               hintStyle: theme.inputDecorationTheme.hintStyle,
 
-              // ==================================================
-              // Normal Border
-              // ==================================================
               enabledBorder: OutlineInputBorder(
                 borderRadius:
                     widget.borderRadius ?? BorderRadius.circular(16.r),
@@ -250,9 +221,6 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                 ),
               ),
 
-              // ==================================================
-              // Focused Border
-              // ==================================================
               focusedBorder: OutlineInputBorder(
                 borderRadius:
                     widget.borderRadius ?? BorderRadius.circular(16.r),
@@ -263,9 +231,6 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                 ),
               ),
 
-              // ==================================================
-              // Error Border
-              // ==================================================
               errorBorder: OutlineInputBorder(
                 borderRadius:
                     widget.borderRadius ?? BorderRadius.circular(16.r),
@@ -273,9 +238,6 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                 borderSide: BorderSide(color: colorScheme.error, width: 1),
               ),
 
-              // ==================================================
-              // Focused Error Border
-              // ==================================================
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius:
                     widget.borderRadius ?? BorderRadius.circular(16.r),
@@ -285,19 +247,17 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             ),
           ),
         ),
-
-        // ========================================================
-        // Error Text
-        // ========================================================
-        if (hasError) ...[
+        if (hasCustomError) ...[
           SizedBox(height: 6.h),
-
-          Text(
-            widget.errorText!,
-            style: theme.textTheme.bodyMedium!.copyWith(
-              color: colorScheme.error,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w400,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              widget.errorText!,
+              style: theme.textTheme.bodyMedium!.copyWith(
+                color: colorScheme.error,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ],

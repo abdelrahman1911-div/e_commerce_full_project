@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:e_commerce_full_project/features/auth/domain/repos/auth_repos.dart';
 import 'package:e_commerce_full_project/features/auth/register/cubit/register_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,10 +12,6 @@ final AuthRepository _authRepository;
 RegisterCubit(this._authRepository) : super(RegisterInitialState()); 
 
 final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
  bool isPassword = true;
   IconData suffixIcon = Icons.visibility_off_outlined; 
   void changePasswordVisibility () {
@@ -22,41 +20,33 @@ final formKey = GlobalKey<FormState>();
     emit(RegisterChangePasswordVisibilityState()); 
   } 
   
- Future <void> register () async  {
-   
+Future<void> register({
+  required String name,
+  required String email,
+  required String password,
+  required String phone,
+  File? profileImage,
+}) async {
+  emit(RegisterLoadingState());
 
- emit(RegisterLoadingState()); 
+  try {
+    final user = await _authRepository.register(
+      name: name,
+      email: email,
+      password: password,
+      phone: phone,
+      profileImage: profileImage,
+    );
 
- try {
-   final user = await _authRepository.register(
-    name: nameController.text.trim(),
-     email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-       phone:  
-       phoneController.text.trim(), ); 
-   emit(RegisterSuccessState(user)); 
- 
- } on FirebaseAuthException catch(e) {
-   emit(RegisterErrorState((e.toString())));
- 
- }
-  catch(e){
-       emit(RegisterErrorState((e.toString())));
- }
- } 
-  
-   @override
-  Future<void> close() { 
-
-    nameController.dispose(); 
-
-    emailController.dispose(); 
-
-    phoneController.dispose(); 
-
-    passwordController.dispose(); 
-
-    return super.close(); 
-
-  } 
+    emit(RegisterSuccessState(user));
+  } on FirebaseAuthException catch (e) {
+    emit(
+      RegisterErrorState(
+        e.message ?? 'Registration failed',
+      ),
+    );
+  } catch (e) {
+    emit(RegisterErrorState(e.toString()));
+  }
+}
 } 

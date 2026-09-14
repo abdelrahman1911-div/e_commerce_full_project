@@ -1,18 +1,15 @@
 import 'package:equatable/equatable.dart';
-
 class AuthUser extends Equatable {
   final String uid;
   final String? email;
-  final String? displayName;
+  final String? displayname;
   final String? photoUrl;
-    final String role;
    final String phone; 
   const AuthUser({
     required this.uid,
     this.email,
-    this.displayName,
+    this.displayname,
     this.photoUrl, 
-    this.role = "user",  
     this.phone ='',
   });
 
@@ -20,9 +17,8 @@ class AuthUser extends Equatable {
   List<Object?> get props => [
     uid,
     email,
-    displayName,
+    displayname,
     photoUrl, 
-    role, 
     phone, 
   ];
 }

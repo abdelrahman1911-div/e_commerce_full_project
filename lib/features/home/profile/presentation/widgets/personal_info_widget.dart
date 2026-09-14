@@ -24,14 +24,39 @@ class PersonalInfoWidget extends StatelessWidget {
           SizedBox(height: 10.h),
           Row(
             children: [
-              CircleAvatar(
-                radius: 30.r,
-                backgroundColor: Colors.grey.shade300,
-                backgroundImage: NetworkImage(
-                  person_image ??
-                      'https://media.istockphoto.com/id/1371041895/photo/portrait-of-charming-woman-looking-at-camera-during-studying-on-laptop-at-coworking-space.jpg?s=2048x2048&w=is&k=20&c=g_4FvDbVjYPVEKSVEuVM7MaR-ODZjO32kETXeZr7Xg4=',
-                ),
+        ClipOval(
+  child: person_image != null && person_image!.isNotEmpty
+      ? Image.network(
+          person_image!,
+          width: 60.r,
+          height: 60.r,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            debugPrint('FACEBOOK IMAGE ERROR: $error');
+
+            return Container(
+              width: 60.r,
+              height: 60.r,
+              color: Colors.grey.shade300,
+              child: Icon(
+                Icons.person,
+                size: 30.r,
+                color: Colors.grey.shade600,
               ),
+            );
+          },
+        )
+      : Container(
+          width: 60.r,
+          height: 60.r,
+          color: Colors.grey.shade300,
+          child: Icon(
+            Icons.person,
+            size: 30.r,
+            color: Colors.grey.shade600,
+          ),
+        ),
+),
               SizedBox(width: 15.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

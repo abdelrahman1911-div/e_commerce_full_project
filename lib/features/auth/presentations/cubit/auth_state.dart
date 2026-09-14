@@ -11,7 +11,8 @@ class AuthInitial extends AuthState {
 } 
 class AuthChecking extends AuthState {}
 
-class AuthLoading extends AuthState{} 
+class AuthLoading extends AuthState{}  
+class AuthUnauthenticated extends AuthState {}
 class AuthSuccess extends AuthState{
   final AuthUser user ;
   const AuthSuccess(this.user); 

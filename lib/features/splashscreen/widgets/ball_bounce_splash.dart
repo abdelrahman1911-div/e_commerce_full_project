@@ -11,8 +11,8 @@ class BallBounceSplash extends StatefulWidget {
 
 class _BallBounceSplashState extends State<BallBounceSplash>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _bounceAnimation;
+  late final AnimationController _controller;
+  late final Animation<double> _bounceAnimation;
 
   @override
   void initState() {
@@ -20,61 +20,38 @@ class _BallBounceSplashState extends State<BallBounceSplash>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1200),
     );
 
     _bounceAnimation = TweenSequence<double>([
-      // البداية → نزول التنطيطة الأولى
-      // TweenSequenceItem(
-      //   tween: Tween<double>(
-      //     begin: 0.0,
-      //     end: 1.0,
-      //   ).chain(
-      //     CurveTween(curve: Curves.easeIn),
-      //   ),
-      //   weight: 20,
-      // ),
-
-      // // طلوع التنطيطة الأولى
-      // TweenSequenceItem(
-      //   tween: Tween<double>(
-      //     begin: 1.0,
-      //     end: 0.0,
-      //   ).chain(
-      //     CurveTween(curve: Curves.easeOut),
-      //   ),
-      //   weight: 20,
-      // ),
-
-      // نزول التنطيطة الثانية
+      // نزول
       TweenSequenceItem(
         tween: Tween<double>(
           begin: 0.0,
           end: 0.65,
         ).chain(
-          CurveTween(curve: Curves.easeIn),
+          CurveTween(
+            curve: Curves.easeIn,
+          ),
         ),
-        weight: 15,
+        weight: 40,
       ),
 
-      // طلوع التنطيطة الثانية → مكانها الأصلي
+      // طلوع
       TweenSequenceItem(
         tween: Tween<double>(
           begin: 0.65,
           end: 0.0,
         ).chain(
-          CurveTween(curve: Curves.easeOut),
+          CurveTween(
+            curve: Curves.elasticOut,
+          ),
         ),
-        weight: 20,
-      ),
-
-      // تثبيت الكرة في مكانها
-      TweenSequenceItem(
-        tween: ConstantTween<double>(0.0),
-        weight: 25,
+        weight: 60,
       ),
     ]).animate(_controller);
 
+    // ابدأ الـ bounce
     _controller.forward();
   }
 
@@ -90,26 +67,23 @@ class _BallBounceSplashState extends State<BallBounceSplash>
       color: Colors.white,
       child: Center(
         child: AnimatedBuilder(
-          animation: _controller,
+          animation: _bounceAnimation,
           builder: (context, child) {
             return Transform.translate(
               offset: Offset(
                 0,
                 _bounceAnimation.value * 150.h,
               ),
-              child: Container(
-                height: 180.w,
-                width: 180.w,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: SvgPicture.asset(
-                  "assets/surfco-icon.svg",
-                ),
-              ),
+              child: child,
             );
           },
+          child: SizedBox(
+            height: 180.w,
+            width: 180.w,
+            child: SvgPicture.asset(
+              'assets/surfco-icon.svg',
+            ),
+          ),
         ),
       ),
     );

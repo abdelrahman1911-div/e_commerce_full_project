@@ -8,14 +8,13 @@ import 'package:e_commerce_full_project/features/home/customnavbar/customnavbar.
 import 'package:e_commerce_full_project/features/home/favourite/favourite_screen.dart';
 import 'package:e_commerce_full_project/features/home/mycart/mycart_screen.dart';
 import 'package:e_commerce_full_project/features/home/product/product_data.dart';
-import 'package:e_commerce_full_project/features/home/profile/profile_screen.dart';
+import 'package:e_commerce_full_project/features/home/profile/presentation/screen/profile_screen.dart';
 import 'package:e_commerce_full_project/core/widgets/carousel_widget.dart';
 import 'package:e_commerce_full_project/core/widgets/product_card.dart';
 import 'package:e_commerce_full_project/features/home/widgets/build_Items_list.dart';
 import 'package:e_commerce_full_project/features/home/widgets/header_image_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -108,18 +107,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  // Widget buildBrandList() {
-  //   final colorScheme = Theme.of(context).colorScheme;
-  //   return SizedBox(
-  //     height: 80.h,
-  //     child: CustomListView(
-  //       Scroll: Axis.horizontal,
-  //       items: brandData.brandsList,
-  //       itemBuilder: (context, item, index) {
-  //         final brand = brandData.brandsList[index];
-  //         return ListItemWidget(brand: brand, isCategories: false);
-  //       },
-  //     ),
-  //   );
-  // }
 }

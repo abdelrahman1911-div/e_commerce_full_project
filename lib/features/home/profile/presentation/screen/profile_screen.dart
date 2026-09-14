@@ -1,12 +1,17 @@
 import 'package:e_commerce_full_project/core/widgets/app_bar_prod_home.dart';
+import 'package:e_commerce_full_project/features/auth/presentations/cubit/auth_cubit.dart';
+import 'package:e_commerce_full_project/features/auth/presentations/cubit/auth_state.dart';
 import 'package:e_commerce_full_project/features/home/homescreen.dart';
-import 'package:e_commerce_full_project/features/home/profile/widgets/personal_info_widget.dart';
+import 'package:e_commerce_full_project/features/home/profile/presentation/cubit/user_cubit.dart';
+import 'package:e_commerce_full_project/features/home/profile/presentation/cubit/user_state.dart';
+import 'package:e_commerce_full_project/features/home/profile/presentation/widgets/personal_info_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/myorders_screen.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/paymentPerferences_screen.dart';
-import 'package:e_commerce_full_project/features/home/profile/widgets/settings_card.dart';
+import 'package:e_commerce_full_project/features/home/profile/presentation/widgets/settings_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,7 +22,18 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> { 
+  void initState() {
+  super.initState();
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final authState = context.read<AuthCubit>().state;
+
+    if (authState is AuthSuccess) {
+      context.read<UserCubit>().getUser(authState.user.uid);
+    } 
+  });
+}
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -39,10 +55,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PersonalInfoWidget(
-                    personal_name: "Abdelrahman Tarek",
-                    person_image:
-                        "https://imgs.search.brave.com/jc74uYRJf9Md1ZIUZzVUjlytO1ssgKsJl5-uZ4AXom8/rs:fit:200:200:1:0/g:ce/aHR0cHM6Ly9hLmVz/cG5jZG4uY29tL3Bo/b3RvLzIwMjYvMDgz/MC9yMTcwODk2NF8x/Mjk2eDcyOV8xNi05/LmpwZw",
+                  BlocBuilder<UserCubit, UserState>(
+                    builder: (context, state) {
+                                   if (state is UserLoaded ||
+                       state is UserUpdated ||
+                       state is UserUpdating) {
+                     final user = state is UserLoaded
+                         ? state.user
+                         : state is UserUpdated
+                             ? state.user
+                             : (state as UserUpdating).user;
+                     debugPrint('PROFILE NAME = ${user.displayname}');
+                     debugPrint('PROFILE PHOTO = ${user.photoUrl}');
+                     return PersonalInfoWidget(
+                       personal_name: user.displayname,
+                       person_image: user.photoUrl,
+                     );
+                   }
+                   if (state is UserLoading) {
+                     return const Center(
+                       child: CircularProgressIndicator(),
+                     );
+                   }
+                      return const SizedBox();
+                    },
                   ),
                   SizedBox(height: 4.h),
                   Padding(

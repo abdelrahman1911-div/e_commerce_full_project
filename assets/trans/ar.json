@@ -215,5 +215,12 @@
   "personal_information.address": "عنوانك", 
    "personal_information.save_changes" : "أحفظ بياناتك الشخصيه",  
     "personal_information.edit_information" : "عدل بياناتك الشخصيه", 
-    "personal_information.updated_successfully" : "تم تعديل بياناتك الشخصيه ب نجاح"
+    "personal_information.updated_successfully" : "تم تعديل بياناتك الشخصيه ب نجاح", 
+  "forgot_password_description": "أدخل بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور.",
+  "send_reset_link": "إرسال رابط إعادة التعيين",
+  "sending": "جاري الإرسال...",
+  "password_reset_email_sent": "تم إرسال رابط إعادة تعيين كلمة المرور بنجاح.",
+  "back_to_login": "العودة لتسجيل الدخول",
+  "please_enter_email": "من فضلك أدخل البريد الإلكتروني.",
+  "please_enter_valid_email": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا."
 }
