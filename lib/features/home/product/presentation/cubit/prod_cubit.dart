@@ -1,6 +1,7 @@
 import 'package:e_commerce_full_project/features/home/product/domain/prod_repo.dart';
 import 'package:e_commerce_full_project/features/home/product/presentation/cubit/prod_state.dart';
 import 'package:e_commerce_full_project/features/home/product/product_data.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductCubit extends Cubit<ProductState> {
@@ -12,9 +13,7 @@ class ProductCubit extends Cubit<ProductState> {
     emit(ProductLoading());
 
     try {
-      await _productRepository.uploadAllProducts(
-        ProductData().productsList,
-      );
+      await _productRepository.uploadAllProducts(ProductData().productsList);
 
       emit(ProductUploadSuccess());
     } catch (e) {
@@ -27,8 +26,9 @@ class ProductCubit extends Cubit<ProductState> {
 
     try {
       final products = await _productRepository.getAllProducts();
-
       emit(ProductSuccess(products));
+      debugPrint('==============================');
+      debugPrint('PRODUCTS FROM FIREBASE: ${products.length}');
     } catch (e) {
       emit(ProductError(e.toString()));
     }

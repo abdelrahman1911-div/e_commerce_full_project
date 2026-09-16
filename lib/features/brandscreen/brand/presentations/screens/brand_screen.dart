@@ -3,12 +3,10 @@ import 'package:e_commerce_full_project/core/widgets/List_view_widget.dart';
 import 'package:e_commerce_full_project/core/widgets/No_items_widget.dart';
 import 'package:e_commerce_full_project/core/widgets/brand_categories_widget.dart';
 import 'package:e_commerce_full_project/core/widgets/items_grid_view_widget.dart';
-
 import 'package:e_commerce_full_project/features/brandscreen/brand/presentations/cubit/brand_cubit.dart';
 import 'package:e_commerce_full_project/features/brandscreen/brand/presentations/cubit/brand_state.dart';
 import 'package:e_commerce_full_project/features/home/product/presentation/cubit/prod_cubit.dart';
 import 'package:e_commerce_full_project/features/home/product/presentation/cubit/prod_state.dart';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +31,6 @@ class _BrandScreenState extends State<BrandScreen> {
     selectedBrandId = widget.selectedBrandId;
 
     context.read<BrandCubit>().getAllBrands();
-
     context.read<ProductCubit>().getAllProducts();
   }
 
@@ -53,33 +50,26 @@ class _BrandScreenState extends State<BrandScreen> {
         backgroundColor: colorScheme.onPrimary,
         elevation: 0,
       ),
-
       body: BlocBuilder<BrandCubit, BrandState>(
         builder: (context, brandState) {
           if (brandState is BrandLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-
           if (brandState is BrandError) {
             return Center(
               child: Text(brandState.message, textAlign: TextAlign.center),
             );
           }
-
           if (brandState is BrandSuccess) {
             final brands = brandState.brands;
 
             if (brands.isEmpty) {
               return NoItemsWidget(mainText: 'no_items'.tr());
             }
-
-            // لو مفيش Brand متحدد
-            // اختار أول Brand
             if (selectedBrandId == null ||
                 !brands.any((brand) => brand.id == selectedBrandId)) {
               selectedBrandId = brands.first.id;
             }
-
             return Column(
               children: [
                 SizedBox(height: 12.h),
@@ -111,16 +101,19 @@ class _BrandScreenState extends State<BrandScreen> {
 
                 Divider(height: 20.h, thickness: 1, color: Colors.grey[300]),
 
-                // =========================
-                // Products
-                // =========================
                 Expanded(
                   child: BlocBuilder<ProductCubit, ProductState>(
                     builder: (context, productState) {
+                      // =========================
+                      // Products Loading
+                      // =========================
                       if (productState is ProductLoading) {
                         return const Center(child: CircularProgressIndicator());
                       }
 
+                      // =========================
+                      // Products Error
+                      // =========================
                       if (productState is ProductError) {
                         return Center(
                           child: Text(
@@ -130,11 +123,10 @@ class _BrandScreenState extends State<BrandScreen> {
                         );
                       }
 
+                      // =========================
+                      // Products Success
+                      // =========================
                       if (productState is ProductSuccess) {
-                        final selectedBrand = brands.firstWhere(
-                          (brand) => brand.id == selectedBrandId,
-                        );
-
                         final products = productState.products
                             .where(
                               (product) => product.brandId == selectedBrandId,
@@ -146,9 +138,10 @@ class _BrandScreenState extends State<BrandScreen> {
                             mainText: 'no_products_in_category'.tr(),
                           );
                         }
+
                         return ItemsGridViewWidget(
                           productList: products,
-                          brandModel: selectedBrand,
+                          brands: brands,
                         );
                       }
 

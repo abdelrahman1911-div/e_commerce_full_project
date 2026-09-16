@@ -6,20 +6,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ItemsGridViewWidget extends StatelessWidget {
   final List<ProductModel> productList;
-  final BrandModel? brandModel;
+  final List<BrandModel> brands;
   final ScrollPhysics? scroll;
   final SliverGridDelegate? gridDelegate;
 
   const ItemsGridViewWidget({
     super.key,
     required this.productList,
+    required this.brands,
     this.gridDelegate,
     this.scroll,
-    this.brandModel,
   });
 
   @override
   Widget build(BuildContext context) {
+    // brand id -> brand name
+    final Map<String, String> brandNames = {
+      for (final brand in brands) brand.id: brand.name,
+    };
+
     return GridView.builder(
       padding: EdgeInsets.symmetric(
         horizontal: 16.w,
@@ -36,9 +41,14 @@ class ItemsGridViewWidget extends StatelessWidget {
           ),
       itemCount: productList.length,
       itemBuilder: (context, index) {
+        final product = productList[index];
+
+        final String brandName =
+            brandNames[product.brand] ?? product.brand;
+
         return ProductCardWidget(
-          product: productList[index],
-          brandName: brandModel?.name,
+          product: product,
+          brandName: brandName,
         );
       },
     );

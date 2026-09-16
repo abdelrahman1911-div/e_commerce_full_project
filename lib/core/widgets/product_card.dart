@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 class ProductCardWidget extends StatefulWidget {
   final ProductModel product;
 
+  // Brand name coming from Firebase
   final String? brandName;
 
   const ProductCardWidget({super.key, required this.product, this.brandName});
@@ -50,6 +51,9 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
                 ),
               ),
 
+              // =========================
+              // Favorite
+              // =========================
               Positioned(
                 top: 8.h,
                 right: 8.w,
@@ -97,7 +101,6 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
         ),
 
         SizedBox(height: 5.h),
-
         Text(
           widget.product.name,
           maxLines: 1,
@@ -111,18 +114,20 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
 
         Row(
           children: [
-            Text(
-              widget.brandName ?? widget.product.brand,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w400,
+            Expanded(
+              child: Text(
+                widget.brandName ?? widget.product.brandId,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
 
-            const Spacer(),
+            SizedBox(width: 4.w),
 
             Icon(Icons.star, color: Colors.amber, size: 14.sp),
 
@@ -150,6 +155,9 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
           ],
         ),
 
+        // =========================
+        // Price + Discount + Cart
+        // =========================
         Row(
           children: [
             Text(
@@ -176,6 +184,9 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
 
             const Spacer(),
 
+            // =========================
+            // Discount
+            // =========================
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
               decoration: BoxDecoration(
@@ -193,40 +204,38 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
             ),
 
             SizedBox(width: 6.w),
-InkWell(
-  onTap: () { 
-    ScaffoldMessenger.of(context).showSnackBar(
-SnackBar(
-backgroundColor: Colors.green.shade500,
-content: Text(
-'Please_choose_size_color'.tr(),
-),
-duration: const Duration(milliseconds: 1500),
-),
-);
-    context.push(
-      AppRoutes.product,
-      extra: widget.product,
-    ); 
 
-  },
-  borderRadius: BorderRadius.circular(6.r),
-  child: Container(
-    width: 25.w,
-    height: 20.h,
-    padding: EdgeInsets.all(6.w),
-    decoration: BoxDecoration(
-      color: colorScheme.primary,
-      borderRadius: BorderRadius.circular(6.r),
-    ),
-    child: Icon(
-      Icons.shopping_cart_outlined,
-      color: colorScheme.onPrimary,
-      size: 13.sp,
-    ),
-  ),
-),
+            // =========================
+            // Add To Cart
+            // =========================
+            InkWell(
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.green.shade500,
+                    content: Text('Please_choose_size_color'.tr()),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
+                );
 
+                context.push(AppRoutes.product, extra: widget.product);
+              },
+              borderRadius: BorderRadius.circular(6.r),
+              child: Container(
+                width: 25.w,
+                height: 20.h,
+                padding: EdgeInsets.all(6.w),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary,
+                  borderRadius: BorderRadius.circular(6.r),
+                ),
+                child: Icon(
+                  Icons.shopping_cart_outlined,
+                  color: colorScheme.onPrimary,
+                  size: 13.sp,
+                ),
+              ),
+            ),
           ],
         ),
       ],

@@ -74,10 +74,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ProductWidget(pro: widget.product),
-
-                // =================================================
-                // COLOR
-                // =================================================
                 ColorsWidget(
                   product: widget.product,
                   onColorSelected: (color) {
@@ -88,10 +84,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
 
                 SizedBox(height: 4.h),
-
-                // =================================================
-                // SIZE
-                // =================================================
                 SizesWidget(
                   prod: widget.product,
                   onSizeSelected: (size) {

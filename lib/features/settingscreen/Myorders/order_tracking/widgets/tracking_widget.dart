@@ -47,15 +47,47 @@ class _TrackingWidgetState extends State<TrackingWidget> {
     getOrder();
   }
 
+  // ============================================================
+  // FORMAT ADDRESS
+  // ============================================================
+
+  String _formatAddress(String address) {
+    if (address.trim().isEmpty) {
+      return address;
+    }
+
+    String formattedAddress = address.trim();
+    final plusCodeRegex = RegExp(
+      r'^[A-Z0-9]{4,8}\+[A-Z0-9]{2,4},?\s*',
+      caseSensitive: false,
+    );
+
+    formattedAddress = formattedAddress.replaceFirst(plusCodeRegex, '');
+
+
+    formattedAddress = formattedAddress.replaceAll(
+      RegExp(r'(,\s*Egypt)+', caseSensitive: false),
+      ', Egypt',
+    );
+    formattedAddress = formattedAddress.replaceAll(RegExp(r'\s+'), ' ');
+    formattedAddress = formattedAddress.replaceAll(RegExp(r',\s*,+'), ',');
+    formattedAddress = formattedAddress.replaceFirst(RegExp(r',\s*$'), '');
+    return formattedAddress.trim();
+  }
+
+
   Future<void> getOrder() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
 
       if (currentUser == null) {
+        if (!mounted) return;
+
         setState(() {
           isLoading = false;
           errorMessage = 'User is not authenticated';
         });
+
         return;
       }
 
@@ -69,24 +101,32 @@ class _TrackingWidgetState extends State<TrackingWidget> {
           .get();
 
       if (!doc.exists) {
+        if (!mounted) return;
+
         setState(() {
           isLoading = false;
           errorMessage = 'Order not found';
         });
+
         return;
       }
 
       final data = doc.data();
 
       if (data == null) {
+        if (!mounted) return;
+
         setState(() {
           isLoading = false;
           errorMessage = 'Order data is empty';
         });
+
         return;
       }
 
       final selectedOrder = OrderModel.fromJson(data);
+
+      if (!mounted) return;
 
       setState(() {
         order = selectedOrder;
@@ -95,12 +135,19 @@ class _TrackingWidgetState extends State<TrackingWidget> {
     } catch (e) {
       debugPrint('GET ORDER ERROR: $e');
 
+      if (!mounted) return;
+
       setState(() {
         isLoading = false;
         errorMessage = e.toString();
       });
     }
   }
+
+  // ============================================================
+  // ACTIVE STEP
+  // ============================================================
+
   int get activeStep {
     switch (order?.status.toLowerCase()) {
       case 'pending':
@@ -120,6 +167,10 @@ class _TrackingWidgetState extends State<TrackingWidget> {
         return 0;
     }
   }
+
+  // ============================================================
+  // BUILD
+  // ============================================================
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +205,12 @@ class _TrackingWidgetState extends State<TrackingWidget> {
       );
     }
 
+    // ==========================================================
+    // FORMATTED ADDRESS
+    // ==========================================================
+
+    final String formattedAddress = _formatAddress(order!.address);
+
     return Container(
       width: widget.width ?? double.infinity,
       padding: widget.padd ?? EdgeInsets.all(16.w),
@@ -179,16 +236,13 @@ class _TrackingWidgetState extends State<TrackingWidget> {
 
               SizedBox(width: 20.w),
 
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    order!.address,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                ],
+              Expanded(
+                child: Text(
+                  formattedAddress,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium,
+                ),
               ),
             ],
           ),

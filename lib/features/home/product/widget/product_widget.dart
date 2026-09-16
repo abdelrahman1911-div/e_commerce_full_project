@@ -143,7 +143,7 @@ class _ProductWidgetState extends State<ProductWidget> {
 
                 SizedBox(width: 3.w),
                 Text(
-                  '${widget.pro.reviews}',
+                  '(${widget.pro.reviews})',
                   style: AppTextStyles.buttonText(context).copyWith(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 12.sp,

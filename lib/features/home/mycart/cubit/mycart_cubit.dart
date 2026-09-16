@@ -3,27 +3,16 @@ import 'package:e_commerce_full_project/features/home/mycart/data/model/cart_ite
 import 'package:e_commerce_full_project/features/home/mycart/domain/cart_repo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-// ============================================================
-// STATES
-// ============================================================
-
 abstract class CartState extends Equatable {
   const CartState();
-
   @override
   List<Object?> get props => [];
 }
-
 class CartInitial extends CartState {}
-
 class CartLoading extends CartState {}
-
 class CartLoaded extends CartState {
   final List<CartItemModel> items;
-
   const CartLoaded(this.items);
-
   @override
   List<Object?> get props => [items];
 }
@@ -44,17 +33,14 @@ class CartError extends CartState {
 class CartCubit extends Cubit<CartState> {
   final CartRepository _cartRepository;
 
-  CartCubit(this._cartRepository) : super(CartInitial());
+  CartCubit(this._cartRepository) : super(CartInitial()) {
+    getCart();
+  }
 
   List<CartItemModel> cartItems = [];
 
-  // ============================================================
-  // GET CART
-  // ============================================================
-
   Future<void> getCart() async {
     emit(CartLoading());
-
     try {
       final items = await _cartRepository.getCart();
 
@@ -70,17 +56,15 @@ class CartCubit extends Cubit<CartState> {
         'Cart loaded successfully: ${cartItems.length} items',
       );
     } catch (e) {
-      log('Failed to load cart: $e');
+      log(
+        'Failed to load cart: $e',
+      );
 
       emit(
         CartError(e.toString()),
       );
     }
   }
-
-  // ============================================================
-  // ADD TO CART
-  // ============================================================
 
   Future<void> addToCart({
     required String productId,
@@ -103,21 +87,22 @@ class CartCubit extends Cubit<CartState> {
         'size: $selectedSize',
       );
     } catch (e) {
-      log('Failed to add product to cart: $e');
+      log(
+        'Failed to add product to cart: $e',
+      );
 
       emit(
         CartError(e.toString()),
       );
     }
   }
-
-  // ============================================================
-  // INCREASE QUANTITY
-  // ============================================================
-
-  Future<void> increaseQuantity(String cartItemId) async {
+  Future<void> increaseQuantity(
+    String cartItemId,
+  ) async {
     try {
-      await _cartRepository.increaseQuantity(cartItemId);
+      await _cartRepository.increaseQuantity(
+        cartItemId,
+      );
 
       await getCart();
 
@@ -135,13 +120,13 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
-  // ============================================================
-  // DECREASE QUANTITY
-  // ============================================================
-
-  Future<void> decreaseQuantity(String cartItemId) async {
+  Future<void> decreaseQuantity(
+    String cartItemId,
+  ) async {
     try {
-      await _cartRepository.decreaseQuantity(cartItemId);
+      await _cartRepository.decreaseQuantity(
+        cartItemId,
+      );
 
       await getCart();
 
@@ -159,13 +144,14 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
-  // ============================================================
-  // REMOVE
-  // ============================================================
 
-  Future<void> removeFromCart(String cartItemId) async {
+  Future<void> removeFromCart(
+    String cartItemId,
+  ) async {
     try {
-      await _cartRepository.removeFromCart(cartItemId);
+      await _cartRepository.removeFromCart(
+        cartItemId,
+      );
 
       await getCart();
 
@@ -182,11 +168,6 @@ class CartCubit extends Cubit<CartState> {
       );
     }
   }
-
-  // ============================================================
-  // CLEAR CART
-  // ============================================================
-
   Future<void> clearCart() async {
     try {
       await _cartRepository.clearCart();
@@ -197,7 +178,9 @@ class CartCubit extends Cubit<CartState> {
         const CartLoaded([]),
       );
 
-      log('Cart cleared successfully');
+      log(
+        'Cart cleared successfully',
+      );
     } catch (e) {
       log(
         'Failed to clear cart: $e',
