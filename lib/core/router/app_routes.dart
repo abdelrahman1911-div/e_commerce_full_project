@@ -20,9 +20,7 @@ class AppRoutes {
   static const String changepass = '/ChangePasswordScreen';
   static const String categorise = '/CategoriseScreen'; 
   static const String onboarding = '/OnboardingScreen';  
-    static const String splash = '/SplashScreen';  
-    static const String brand = '/BrandScreen';  
-    static const String forgetPass = '/ForgotPasswordScreen'; 
-
-
+  static const String splash = '/SplashScreen';  
+  static const String brand = '/BrandScreen';  
+  static const String forgetPass = '/ForgotPasswordScreen'; 
 }

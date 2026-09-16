@@ -1,5 +1,5 @@
 import 'package:e_commerce_full_project/features/home/customnavbar/widgets/custom_nav_bar_item.dart';
-import 'package:e_commerce_full_project/features/home/favourite/cubit/favourite_cubit.dart';
+import 'package:e_commerce_full_project/features/home/favourite/peresentation/cubit/favourite_cubit.dart';
 import 'package:e_commerce_full_project/features/home/mycart/cubit/mycart_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +16,6 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartProducts = context.watch<CartCubit>().state;
     final favouriteState = context.watch<FavouriteCubit>().state;
     final hasFavourites =
         favouriteState is FavouriteLoaded &&
@@ -45,14 +44,20 @@ class CustomBottomNavBar extends StatelessWidget {
             index: 0,
             onTap: onTap,
           ),
-          CustomNavBarItem(
-            currentIndex: currentIndex,
-            icon: Icons.shopping_bag_outlined,
-            index: 1,
-            onTap: onTap,
-            showNotification: cartProducts.isNotEmpty,
-            notificationColor: Colors.orange,
-          ),
+         BlocBuilder<CartCubit, CartState>(
+  builder: (context, cartState) {
+    return CustomNavBarItem(
+      currentIndex: currentIndex,
+      icon: Icons.shopping_bag_outlined,
+      index: 1,
+      onTap: onTap,
+      showNotification:
+          cartState is CartLoaded &&
+          cartState.items.isNotEmpty,
+      notificationColor: Colors.orange,
+    );
+  },
+),
           CustomNavBarItem(
             currentIndex: currentIndex,
             icon: Icons.favorite_outline,

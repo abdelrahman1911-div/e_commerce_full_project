@@ -1,7 +1,9 @@
 import 'package:e_commerce_full_project/core/styling/app_text_styles.dart';
 import 'package:e_commerce_full_project/core/styling/appcolors.dart';
-import 'package:e_commerce_full_project/features/home/favourite/cubit/favourite_cubit.dart';
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'package:e_commerce_full_project/features/home/favourite/peresentation/cubit/favourite_cubit.dart';
+import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
+import 'package:e_commerce_full_project/features/brandscreen/brand/presentations/cubit/brand_cubit.dart';
+import 'package:e_commerce_full_project/features/brandscreen/brand/presentations/cubit/brand_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ProductWidget extends StatefulWidget {
   final ProductModel pro;
   final String? img;
+
   const ProductWidget({super.key, required this.pro, this.img});
   @override
   State<ProductWidget> createState() => _ProductWidgetState();
@@ -35,13 +38,15 @@ class _ProductWidgetState extends State<ProductWidget> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.r),
                   child: Image.network(
-                    widget.img ?? widget.pro.image.toString(),
+                    widget.img ?? widget.pro.image,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
+
             SizedBox(height: 8.h),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,18 +63,23 @@ class _ProductWidgetState extends State<ProductWidget> {
                     ),
                   ),
                 ),
+
                 BlocBuilder<FavouriteCubit, FavouriteState>(
                   builder: (context, state) {
                     final isFavorite = context
                         .read<FavouriteCubit>()
                         .isFavourite(widget.pro);
+
                     return InkWell(
                       onTap: () {
                         final favouriteCubit = context.read<FavouriteCubit>();
+
                         final isAlreadyFavourite = favouriteCubit.isFavourite(
                           widget.pro,
                         );
+
                         favouriteCubit.toggleFavourite(widget.pro);
+
                         if (!isAlreadyFavourite) {
                           showFavoriteMessage(context);
                         }
@@ -89,17 +99,39 @@ class _ProductWidgetState extends State<ProductWidget> {
                 ),
               ],
             ),
+
             SizedBox(height: 3.h),
+
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.pro.brand,
-                  style: AppTextStyles.subheadline(context),
+                BlocBuilder<BrandCubit, BrandState>(
+                  builder: (context, brandState) {
+                    String brandName = widget.pro.brandId;
+
+                    if (brandState is BrandSuccess) {
+                      final matchingBrands = brandState.brands.where(
+                        (brand) => brand.id == widget.pro.brandId,
+                      );
+
+                      if (matchingBrands.isNotEmpty) {
+                        brandName = matchingBrands.first.name;
+                      }
+                    }
+
+                    return Text(
+                      brandName,
+                      style: AppTextStyles.subheadline(context),
+                    );
+                  },
                 ),
-                Spacer(),
+
+                const Spacer(),
+
                 Icon(Icons.star, color: Colors.amberAccent, size: 17.sp),
+
                 SizedBox(width: 2.w),
+
                 Text(
                   '${widget.pro.rating}',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -108,6 +140,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+
                 SizedBox(width: 3.w),
                 Text(
                   '${widget.pro.reviews}',
@@ -123,7 +156,7 @@ class _ProductWidgetState extends State<ProductWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.pro.currentPrice,
+                  widget.pro.currentPrice.toString(),
                   style: AppTextStyles.subheadline(context).copyWith(
                     color: AppColors.priceRed,
                     fontWeight: FontWeight.bold,
@@ -131,7 +164,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                 ),
                 SizedBox(width: 4.w),
                 Text(
-                  widget.pro.oldPrice,
+                  widget.pro.oldPrice.toString(),
                   style: TextStyle(
                     color: Theme.of(
                       context,
@@ -140,7 +173,9 @@ class _ProductWidgetState extends State<ProductWidget> {
                     fontSize: 15.sp,
                   ),
                 ),
+
                 SizedBox(width: 4.w),
+
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 4,
@@ -220,6 +255,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                         ),
 
                         SizedBox(height: 2.h),
+
                         Text(
                           widget.pro.name,
                           style: TextStyle(
@@ -237,7 +273,9 @@ class _ProductWidgetState extends State<ProductWidget> {
         );
       },
     );
+
     overlay.insert(entry);
+
     Future.delayed(const Duration(seconds: 1), () {
       if (entry.mounted) {
         entry.remove();

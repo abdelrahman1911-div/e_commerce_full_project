@@ -3,7 +3,7 @@ import 'package:e_commerce_full_project/core/widgets/List_view_widget.dart';
 import 'package:e_commerce_full_project/core/widgets/No_items_widget.dart';
 import 'package:e_commerce_full_project/features/home/homescreen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:e_commerce_full_project/features/home/favourite/cubit/favourite_cubit.dart'
+import 'package:e_commerce_full_project/features/home/favourite/peresentation/cubit/favourite_cubit.dart'
     show FavouriteCubit, FavouriteInitial, FavouriteLoaded, FavouriteState;
 import 'package:e_commerce_full_project/core/widgets/product_card.dart';
 import 'package:flutter/material.dart';

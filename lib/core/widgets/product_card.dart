@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
-import 'package:e_commerce_full_project/features/home/favourite/cubit/favourite_cubit.dart';
+import 'package:e_commerce_full_project/features/home/favourite/peresentation/cubit/favourite_cubit.dart';
 import 'package:e_commerce_full_project/features/home/mycart/cubit/mycart_cubit.dart';
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +13,9 @@ import 'package:go_router/go_router.dart';
 class ProductCardWidget extends StatefulWidget {
   final ProductModel product;
 
-  const ProductCardWidget({super.key, required this.product});
+  final String? brandName;
+
+  const ProductCardWidget({super.key, required this.product, this.brandName});
 
   @override
   State<ProductCardWidget> createState() => _ProductCardWidgetState();
@@ -24,10 +26,10 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // PRODUCT IMAGE
         InkWell(
           onTap: () {
             context.push(AppRoutes.product, extra: widget.product);
@@ -47,27 +49,30 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
                   ),
                 ),
               ),
+
               Positioned(
                 top: 8.h,
                 right: 8.w,
                 child: BlocBuilder<FavouriteCubit, FavouriteState>(
                   builder: (context, state) {
                     final favouriteCubit = context.read<FavouriteCubit>();
+
                     final isFav = favouriteCubit.isFavourite(widget.product);
+
                     return Material(
                       color: colorScheme.surface.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(20.r),
                       child: InkWell(
-                        onTap: () {
+                        onTap: () async {
                           final favouriteCubit = context.read<FavouriteCubit>();
 
                           final isAlreadyFavourite = favouriteCubit.isFavourite(
                             widget.product,
                           );
 
-                          favouriteCubit.toggleFavourite(widget.product);
+                          await favouriteCubit.toggleFavourite(widget.product);
 
-                          if (!isAlreadyFavourite) {
+                          if (!isAlreadyFavourite && context.mounted) {
                             showFavoriteMessage(context);
                           }
                         },
@@ -90,7 +95,9 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
             ],
           ),
         ),
+
         SizedBox(height: 5.h),
+
         Text(
           widget.product.name,
           maxLines: 1,
@@ -101,30 +108,39 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
             color: colorScheme.onSurface,
           ),
         ),
+
         Row(
           children: [
             Text(
-              widget.product.brand,
+              widget.brandName ?? widget.product.brand,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium!.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w400,
               ),
             ),
+
             const Spacer(),
+
             Icon(Icons.star, color: Colors.amber, size: 14.sp),
+
             SizedBox(width: 2.w),
+
             Text(
-              widget.product.rating,
+              widget.product.rating.toString(),
               style: theme.textTheme.bodyMedium!.copyWith(
                 color: colorScheme.onSurface,
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w600,
               ),
             ),
+
             SizedBox(width: 2.w),
+
             Text(
-              ' ${widget.product.reviews}',
+              '(${widget.product.reviews})',
               style: theme.textTheme.bodyMedium!.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 fontSize: 10.sp,
@@ -133,19 +149,22 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
             ),
           ],
         ),
+
         Row(
           children: [
             Text(
-              widget.product.currentPrice,
+              widget.product.currentPrice.toString(),
               style: theme.textTheme.bodyLarge!.copyWith(
                 color: colorScheme.error,
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w700,
               ),
             ),
+
             SizedBox(width: 4.w),
+
             Text(
-              widget.product.oldPrice,
+              widget.product.oldPrice.toString(),
               style: theme.textTheme.bodyMedium!.copyWith(
                 color: colorScheme.onSurfaceVariant,
                 fontSize: 10.sp,
@@ -154,7 +173,9 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
                 decorationColor: colorScheme.onSurfaceVariant,
               ),
             ),
+
             const Spacer(),
+
             Container(
               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
               decoration: BoxDecoration(
@@ -170,44 +191,51 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
                 ),
               ),
             ),
+
             SizedBox(width: 6.w),
-            InkWell(
-              onTap: () {
-                context.read<CartCubit>().addToCart(widget.product);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.green.shade500,
-                    content: Text(
-                      '${widget.product.name} ${'Added_to_cart'.tr()}',
-                    ),
-                    duration: Duration(milliseconds: 1500),
-                  ),
-                );
-                log('LOCALE: ${context.locale}');
-                log('LANGUAGE CODE: ${context.locale.languageCode}');
-                log('Add to cart was Clicked');
-              },
-              borderRadius: BorderRadius.circular(6.r),
-              child: Container(
-                width: 25.w,
-                height: 20.h,
-                padding: EdgeInsets.all(6.w),
-                decoration: BoxDecoration(
-                  color: colorScheme.primary,
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Icon(
-                  Icons.shopping_cart_outlined,
-                  color: colorScheme.onPrimary,
-                  size: 13.sp,
-                ),
-              ),
-            ),
+InkWell(
+  onTap: () { 
+    ScaffoldMessenger.of(context).showSnackBar(
+SnackBar(
+backgroundColor: Colors.green.shade500,
+content: Text(
+'Please_choose_size_color'.tr(),
+),
+duration: const Duration(milliseconds: 1500),
+),
+);
+    context.push(
+      AppRoutes.product,
+      extra: widget.product,
+    ); 
+
+  },
+  borderRadius: BorderRadius.circular(6.r),
+  child: Container(
+    width: 25.w,
+    height: 20.h,
+    padding: EdgeInsets.all(6.w),
+    decoration: BoxDecoration(
+      color: colorScheme.primary,
+      borderRadius: BorderRadius.circular(6.r),
+    ),
+    child: Icon(
+      Icons.shopping_cart_outlined,
+      color: colorScheme.onPrimary,
+      size: 13.sp,
+    ),
+  ),
+),
+
           ],
         ),
       ],
     );
   }
+
+  // ===========================================================
+  // FAVORITE MESSAGE
+  // ===========================================================
 
   void showFavoriteMessage(BuildContext context) {
     final overlay = Overlay.of(context);
@@ -262,6 +290,7 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
                         ),
 
                         SizedBox(height: 2.h),
+
                         Text(
                           widget.product.name,
                           style: TextStyle(
@@ -281,6 +310,7 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
     );
 
     overlay.insert(entry);
+
     Future.delayed(const Duration(seconds: 1), () {
       if (entry.mounted) {
         entry.remove();
@@ -288,4 +318,3 @@ class _ProductCardWidgetState extends State<ProductCardWidget> {
     });
   }
 }
-// Favourite message

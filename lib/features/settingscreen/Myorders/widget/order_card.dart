@@ -1,5 +1,5 @@
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/orderModel.dart';
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/cubit/order_cubit.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/models/orderModel.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/order_cubit.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/order_tracking/order_tracking.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

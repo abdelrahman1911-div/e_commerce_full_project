@@ -1,14 +1,14 @@
 import 'package:e_commerce_full_project/core/styling/appcolors.dart';
 import 'package:e_commerce_full_project/features/home/mycart/cubit/mycart_cubit.dart';
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'package:e_commerce_full_project/features/home/mycart/data/model/cart_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CartItemWidget extends StatelessWidget {
-  final ProductModel product;
+  final CartItemModel carti;
 
-  const CartItemWidget({super.key, required this.product});
+  const CartItemWidget({super.key, required this.carti});
 
   @override
   Widget build(BuildContext context) {
@@ -19,22 +19,24 @@ class CartItemWidget extends StatelessWidget {
         ? AppColors.darkPrimaryButton
         : AppColors.lightPrimaryButton;
 
-    final quantity = product.quantity;
+    final quantity = carti.quantity;
 
     return Container(
-      height: 95,
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(8),
+      height: 120.h,
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.all(8.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: Colors.grey.shade400, width: 1.w),
       ),
       child: Row(
         children: [
+          // =====================================================
           // IMAGE
+          // =====================================================
           Container(
-            width: 75,
-            height: 75,
+            width: 75.w,
+            height: 75.h,
             decoration: BoxDecoration(
               color: isDark
                   ? AppColors.darkInputFill
@@ -44,7 +46,7 @@ class CartItemWidget extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16.r),
               child: Image.network(
-                product.image,
+                carti.product.image,
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -58,94 +60,168 @@ class CartItemWidget extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
 
+          // =====================================================
           // PRODUCT INFO
+          // =====================================================
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  product.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: primaryColor,
-                  ),
+                // =================================================
+                // NAME + DELETE
+                // =================================================
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        carti.product.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
-                const SizedBox(height: 10),
+                SizedBox(height: 5.h),
 
+                // =================================================
+                // PRICE
+                // =================================================
                 Text(
-                  product.currentPrice,
+                  carti.product.currentPrice.toString(),
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     color: primaryColor,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+
+                // =================================================
+                // COLOR
+                // =================================================
+                if (carti.selectedColor != null &&
+                    carti.selectedColor!.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(top: 3.h),
+                    child: Text(
+                      'Color: ${carti.selectedColor}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+
+                // =================================================
+                // SIZE
+                // =================================================
+                if (carti.selectedSize != null &&
+                    carti.selectedSize!.isNotEmpty)
+                  Text(
+                    'Size: ${carti.selectedSize}',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
               ],
             ),
           ),
 
-          // RIGHT SIDE
+          SizedBox(width: 0.w),
+
+          // =====================================================
+          // QUANTITY
+          // =====================================================
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+
+            crossAxisAlignment: CrossAxisAlignment.center,
+
             children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: InkWell(
-                  onTap: () {
-                    context.read<CartCubit>().removeFromCart(product);
-                  },
-                  child: const Icon(
-                    Icons.delete_outline_rounded,
-                    size: 17,
-                    color: AppColors.accentYellow,
-                  ),
+              // DELETE
+              InkWell(
+                onTap: () {
+                  context.read<CartCubit>().removeFromCart(carti.cartItemId);
+                },
+
+                child: Icon(
+                  Icons.delete_outline_rounded,
+
+                  size: 18.sp,
+
+                  color: AppColors.accentYellow,
                 ),
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: 8.h),
 
               // QUANTITY
               Row(
                 mainAxisSize: MainAxisSize.min,
+
                 children: [
-                  InkWell(
-                    onTap: quantity > 1
-                        ? () {
-                            context.read<CartCubit>().decreaseQuantity(product);
-                          }
-                        : null,
-                    child: Icon(
-                      Icons.remove,
-                      size: 15,
-                      color: quantity > 1 ? null : Colors.grey,
-                    ),
-                  ),
-
-                  const SizedBox(width: 10),
-
-                  Text(
-                    '$quantity',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(width: 10),
-
+                  // MINUS
                   InkWell(
                     onTap: () {
-                      context.read<CartCubit>().increaseQuantity(product);
+                      context.read<CartCubit>().decreaseQuantity(
+                        carti.cartItemId,
+                      );
                     },
-                    child: const Icon(Icons.add, size: 15),
+
+                    child: Icon(
+                      Icons.remove,
+
+                      size: 15.sp,
+
+                      color: quantity > 1
+                          ? theme.colorScheme.onSurface
+                          : Colors.grey,
+                    ),
+                  ),
+
+                  SizedBox(width: 8.w),
+
+                  // NUMBER
+                  Text(
+                    '$quantity',
+
+                    style: TextStyle(
+                      fontSize: 12.sp,
+
+                      fontWeight: FontWeight.bold,
+
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+
+                  SizedBox(width: 8.w),
+
+                  // PLUS
+                  InkWell(
+                    onTap: () {
+                      context.read<CartCubit>().increaseQuantity(
+                        carti.cartItemId,
+                      );
+                    },
+
+                    child: Icon(
+                      Icons.add,
+
+                      size: 15.sp,
+
+                      color: theme.colorScheme.onSurface,
+                    ),
                   ),
                 ],
               ),

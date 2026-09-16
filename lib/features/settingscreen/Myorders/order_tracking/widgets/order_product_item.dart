@@ -1,9 +1,9 @@
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'package:e_commerce_full_project/features/home/mycart/data/model/cart_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderProductItem extends StatelessWidget {
-  final ProductModel product;
+  final CartItemModel product;
   const OrderProductItem({super.key, required this.product});
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,12 @@ class OrderProductItem extends StatelessWidget {
               color: Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16.r),
             ),
-            child: Image.network(product.image, fit: BoxFit.cover),
+            child: Image.network(product.product.image, fit: BoxFit.cover),
           ),
           SizedBox(width: 12.w),
           Expanded(
             child: Text(
-              product.name,
+              product.product.name,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium?.copyWith(
@@ -38,7 +38,7 @@ class OrderProductItem extends StatelessWidget {
           Text('x$quantity', style: theme.textTheme.bodySmall),
           SizedBox(width: 12.w),
           Text(
-            product.currentPrice.toString(),
+            product.product.currentPrice.toString(),
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),

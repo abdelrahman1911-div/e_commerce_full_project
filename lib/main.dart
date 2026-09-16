@@ -3,22 +3,24 @@ import 'dart:developer' show log;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_full_project/core/di/injection_container.dart'
     as InjectionContainer;
-import 'package:e_commerce_full_project/core/helpers/cloudinaryservice/cloudinary_service.dart';
 
 import 'package:e_commerce_full_project/core/router/app_router_configuration.dart';
 
 import 'package:e_commerce_full_project/core/styling/app_themes.dart';
+import 'package:e_commerce_full_project/features/Categoriesscreen/presentation/cubit/category_cubit.dart';
 
 import 'package:e_commerce_full_project/features/auth/presentations/cubit/auth_cubit.dart';
 import 'package:e_commerce_full_project/features/auth/register/cubit/register_cubit.dart';
+import 'package:e_commerce_full_project/features/brandscreen/brand/presentations/cubit/brand_cubit.dart';
 
-import 'package:e_commerce_full_project/features/home/favourite/cubit/favourite_cubit.dart';
+import 'package:e_commerce_full_project/features/home/favourite/peresentation/cubit/favourite_cubit.dart';
 
 import 'package:e_commerce_full_project/features/home/mycart/cubit/mycart_cubit.dart';
+import 'package:e_commerce_full_project/features/home/product/presentation/cubit/prod_cubit.dart';
 import 'package:e_commerce_full_project/features/home/profile/data/repos/user_repo_impl.dart';
 import 'package:e_commerce_full_project/features/home/profile/presentation/cubit/user_cubit.dart';
 
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/cubit/order_cubit.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/order_cubit.dart';
 
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/cubit/payment_preference_services.dart';
 
@@ -45,20 +47,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // =========================
-  // Shared Preferences
-  // =========================
   final prefs = await SharedPreferences.getInstance();
   final bool onboardingComplete = prefs.getBool('onboardingComplete') ?? false;
-  // =========================
-  // Easy Localization
-  // =========================
   await EasyLocalization.ensureInitialized();
-  // =========================
-  // Firebase
-  // =========================
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); 
+  // await InjectionContainer.productRepository.uploadAllProducts(
+  //   ProductData().productsList,
+  // );
   await GoogleSignIn.instance.initialize(
     serverClientId:
         '507116110863-2idafv7fauibaa3lif84a0a9tcsc14p5.apps.googleusercontent.com',
@@ -75,15 +70,24 @@ Future<void> main() async {
       startLocale: const Locale('en'),
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<CartCubit>(create: (_) => CartCubit()),
-          BlocProvider<FavouriteCubit>(create: (_) => FavouriteCubit()),
-          BlocProvider<OrderCubit>(create: (_) => OrderCubit()),
+          BlocProvider<CartCubit>(create: (_) => CartCubit(
+            InjectionContainer.cartRepository
+          )), 
+          BlocProvider<FavouriteCubit>(create: (_) => FavouriteCubit(InjectionContainer.favouriteRepository)..getFavorites()),
+          BlocProvider<OrderCubit>(create: (_) => OrderCubit(InjectionContainer.orderRepo)..getOrders()),
           BlocProvider<PaymentPreferenceCubit>(
             create: (_) => PaymentPreferenceCubit(),
-          ), 
+          ),   
+          BlocProvider<ProductCubit>(
+           create: (_) => ProductCubit(
+             InjectionContainer.productRepository,
+           ),
+         ),
+          BlocProvider<CategoryCubit>(create: (_) => CategoryCubit(InjectionContainer.categoryRepository)), 
+          BlocProvider<BrandCubit>(create: (_) => BrandCubit(InjectionContainer.brandRepository,)), 
           BlocProvider<UserCubit>(
           create: (_) => UserCubit(
-          UserRepoImpl(FirebaseFirestore.instance ,   CloudinaryService(),),
+          UserRepoImpl(FirebaseFirestore.instance ,   InjectionContainer.cloudinaryService,),
            ),
           ),
           BlocProvider<RegisterCubit>(

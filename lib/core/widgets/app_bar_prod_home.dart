@@ -1,7 +1,7 @@
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
 import 'package:e_commerce_full_project/core/styling/app_text_styles.dart';
 import 'package:e_commerce_full_project/core/widgets/couustom_text_field_widget.dart';
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
 import 'package:e_commerce_full_project/core/theme/themeController.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

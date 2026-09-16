@@ -1,6 +1,6 @@
 
 class CategoryModel {
-  final int id; 
+  final String id; 
   final String name; 
   final String image; 
   CategoryModel({
@@ -9,7 +9,7 @@ class CategoryModel {
     required this.image 
   });  
   CategoryModel copyWith({
-   int? id , 
+   String? id , 
    String? name ,
    String? image , 
   }){
@@ -17,9 +17,10 @@ class CategoryModel {
   }
    factory CategoryModel.fromJson(Map<String, dynamic> json) {
       return CategoryModel( 
-        id: json['id'] ?? 1 , 
-        name: json['name'] ?? "" , 
-        image: json['image'] ?? "" ); 
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      image: json['image']?.toString() ?? '',
+       ); 
    } 
   Map<String, dynamic> toJson () {
    return{

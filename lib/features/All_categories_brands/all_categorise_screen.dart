@@ -1,5 +1,5 @@
 import 'package:e_commerce_full_project/features/Categoriesscreen/data/categories_data.dart';
-import 'package:e_commerce_full_project/features/Categoriesscreen/categorise_screen.dart';
+import 'package:e_commerce_full_project/features/Categoriesscreen/presentation/screen/categorise_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 

@@ -222,5 +222,7 @@
   "password_reset_email_sent": "تم إرسال رابط إعادة تعيين كلمة المرور بنجاح.",
   "back_to_login": "العودة لتسجيل الدخول",
   "please_enter_email": "من فضلك أدخل البريد الإلكتروني.",
-  "please_enter_valid_email": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا."
+  "please_enter_valid_email": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا.", 
+    "Please_choose_size_color" : "من فضلك اختر اللون و المقاس المناسب"
+
 }

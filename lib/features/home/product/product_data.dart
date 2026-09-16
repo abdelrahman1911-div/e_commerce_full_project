@@ -1,6 +1,10 @@
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
 
 class ProductData {
+  // =========================
+  // Colors
+  // =========================
+
   static const List<Map<String, dynamic>> clothingColors = [
     {'name': 'Black', 'colorValue': 0xFF111111},
     {'name': 'White', 'colorValue': 0xFFFFFFFF},
@@ -35,7 +39,7 @@ class ProductData {
   ];
 
   // =========================
-  // Product Sizes
+  // Sizes
   // =========================
 
   static const List<Map<String, dynamic>> clothingSizes = [
@@ -105,10 +109,10 @@ class ProductData {
   final List<Map<String, dynamic>> _productsJson = [
     // 1
     {
-      'id': 1,
+      'id': 'prod_001',
       'image':
-          'https://imgs.search.brave.com/QTwrcOxH5eaK8JA4oQrmQrV8YAOQMjJATd5O1z1QJSM/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pLmV0/c3lzdGF0aWMuY29t/LzE1MTk0MjUxL3Iv/aWwvMWI2Y2JkLzE3/NTE3Nzc1NDUvaWxf/Nzk0eE4uMTc1MTc3/NzU0NV9naHVvLmpw/Zw',
-      'brand': 'Rip Curl',
+          'https://imgs.search.brave.com/QTwrcOxH5eaK8JA4oQrmQrV8YAOQMjJATd5O1z1QJSM/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pLmV0/c3lzdGF0aWMuY29t/LzE1MTk0MjUxL3Iv/aWwvMWI2Y2JkLzE3/NTE3Nzc1NDUvaWxf/Nzk0eE4uMTc1MTc3/NzU0NV9naHVvLmpwZw',
+      'brandId': 'rip_curl',
       'rating': '4.9',
       'reviews': '(126)',
       'name': '90s Soccer Windbreaker',
@@ -116,7 +120,7 @@ class ProductData {
       'oldPrice': '\$79.99',
       'discount': '-50%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Classic 90s inspired soccer windbreaker with a lightweight design, comfortable fit, and sporty look perfect for everyday wear.',
       'colors': clothingColors,
@@ -125,10 +129,10 @@ class ProductData {
 
     // 2
     {
-      'id': 2,
+      'id': 'prod_002',
       'image':
           'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Adidas',
+      'brandId': 'adidas',
       'rating': '4.7',
       'reviews': '(89)',
       'name': 'Vintage Track Jacket',
@@ -136,7 +140,7 @@ class ProductData {
       'oldPrice': '\$75.00',
       'discount': '-26%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Vintage inspired Adidas track jacket made with a comfortable lightweight material and a classic sporty design.',
       'colors': clothingColors,
@@ -145,10 +149,10 @@ class ProductData {
 
     // 3
     {
-      'id': 3,
+      'id': 'prod_003',
       'image':
           'https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Nike',
+      'brandId': 'nike',
       'rating': '4.8',
       'reviews': '(210)',
       'name': 'Retro Nylon Windbreaker',
@@ -156,7 +160,7 @@ class ProductData {
       'oldPrice': '\$60.00',
       'discount': '-16%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Retro nylon windbreaker featuring a lightweight construction, sporty silhouette, and comfortable fit for casual outfits.',
       'colors': clothingColors,
@@ -165,10 +169,10 @@ class ProductData {
 
     // 4
     {
-      'id': 4,
+      'id': 'prod_004',
       'image':
           'https://images.unsplash.com/photo-1598032895397-b9472444bf93?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Puma',
+      'brandId': 'puma',
       'rating': '4.6',
       'reviews': '(74)',
       'name': 'Classic Sport Hoodie',
@@ -176,7 +180,7 @@ class ProductData {
       'oldPrice': '\$65.00',
       'discount': '-31%',
       'isFavorite': false,
-      'category': 'kids',
+      'categoryId': 'kids',
       'description':
           'Comfortable classic sport hoodie designed for everyday use with a relaxed fit and soft fabric construction.',
       'colors': kidsColors,
@@ -185,10 +189,10 @@ class ProductData {
 
     // 5
     {
-      'id': 5,
+      'id': 'prod_005',
       'image':
           'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Levis',
+      'brandId': 'levis',
       'rating': '4.8',
       'reviews': '(154)',
       'name': 'Classic Denim Jacket',
@@ -196,7 +200,7 @@ class ProductData {
       'oldPrice': '\$95.00',
       'discount': '-26%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Timeless classic denim jacket with a durable construction, comfortable fit, and versatile style for everyday outfits.',
       'colors': clothingColors,
@@ -205,10 +209,10 @@ class ProductData {
 
     // 6
     {
-      'id': 6,
+      'id': 'prod_006',
       'image':
           'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Zara',
+      'brandId': 'zara',
       'rating': '4.5',
       'reviews': '(98)',
       'name': 'Oversized Casual Jacket',
@@ -216,7 +220,7 @@ class ProductData {
       'oldPrice': '\$89.99',
       'discount': '-33%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Modern oversized casual jacket with a clean silhouette and comfortable design suitable for everyday streetwear.',
       'colors': clothingColors,
@@ -225,10 +229,10 @@ class ProductData {
 
     // 7
     {
-      'id': 7,
+      'id': 'prod_007',
       'image':
           'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=600&q=80',
-      'brand': 'H&M',
+      'brandId': 'h_m',
       'rating': '4.4',
       'reviews': '(67)',
       'name': 'Essential Cotton T-Shirt',
@@ -236,7 +240,7 @@ class ProductData {
       'oldPrice': '\$29.99',
       'discount': '-33%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Essential cotton t-shirt with a soft fabric, regular fit, and minimal design that works perfectly with casual outfits.',
       'colors': clothingColors,
@@ -245,10 +249,10 @@ class ProductData {
 
     // 8
     {
-      'id': 8,
+      'id': 'prod_008',
       'image':
           'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Uniqlo',
+      'brandId': 'uniqlo',
       'rating': '4.7',
       'reviews': '(183)',
       'name': 'Premium Oversized Sweatshirt',
@@ -256,7 +260,7 @@ class ProductData {
       'oldPrice': '\$49.99',
       'discount': '-30%',
       'isFavorite': false,
-      'category': 'wetsuits',
+      'categoryId': 'wetsuits',
       'description':
           'Premium oversized sweatshirt made from soft fabric with a relaxed fit, perfect for comfortable everyday styling.',
       'colors': clothingColors,
@@ -265,10 +269,10 @@ class ProductData {
 
     // 9
     {
-      'id': 9,
+      'id': 'prod_009',
       'image':
           'https://images.unsplash.com/photo-1548883354-94bcfe321cbb?auto=format&fit=crop&w=600&q=80',
-      'brand': 'New Balance',
+      'brandId': 'new_balance',
       'rating': '4.9',
       'reviews': '(245)',
       'name': 'Urban Casual Jacket',
@@ -276,7 +280,7 @@ class ProductData {
       'oldPrice': '\$110.00',
       'discount': '-32%',
       'isFavorite': false,
-      'category': 'boards',
+      'categoryId': 'boards',
       'description':
           'Urban casual jacket combining sporty details with a modern streetwear look and comfortable everyday construction.',
       'colors': clothingColors,
@@ -285,10 +289,10 @@ class ProductData {
 
     // 10
     {
-      'id': 10,
+      'id': 'prod_010',
       'image':
           'https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Under Armour',
+      'brandId': 'under-armor',
       'rating': '4.8',
       'reviews': '(137)',
       'name': 'Performance Training Jacket',
@@ -296,7 +300,7 @@ class ProductData {
       'oldPrice': '\$89.99',
       'discount': '-28%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Lightweight performance training jacket designed for active lifestyles with a sporty fit and comfortable construction.',
       'colors': clothingColors,
@@ -305,10 +309,10 @@ class ProductData {
 
     // 11
     {
-      'id': 11,
+      'id': 'prod_011',
       'image':
           'https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Rip Curl',
+      'brandId': 'rip_curl',
       'rating': '4.8',
       'reviews': '(112)',
       'name': 'Surf Graphic T-Shirt',
@@ -316,7 +320,7 @@ class ProductData {
       'oldPrice': '\$39.99',
       'discount': '-25%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Comfortable surf inspired graphic t-shirt made from soft cotton for everyday casual wear.',
       'colors': clothingColors,
@@ -325,10 +329,10 @@ class ProductData {
 
     // 12
     {
-      'id': 12,
+      'id': 'prod_012',
       'image':
           'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Adidas',
+      'brandId': 'adidas',
       'rating': '4.7',
       'reviews': '(156)',
       'name': 'Adidas Sports T-Shirt',
@@ -336,7 +340,7 @@ class ProductData {
       'oldPrice': '\$45.00',
       'discount': '-22%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Lightweight sports t-shirt designed for comfortable everyday training and casual activities.',
       'colors': clothingColors,
@@ -345,10 +349,10 @@ class ProductData {
 
     // 13
     {
-      'id': 13,
+      'id': 'prod_013',
       'image':
           'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Adidas',
+      'brandId': 'adidas',
       'rating': '4.9',
       'reviews': '(203)',
       'name': 'Women Training Outfit',
@@ -356,7 +360,7 @@ class ProductData {
       'oldPrice': '\$85.00',
       'discount': '-29%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Modern comfortable training outfit with a sporty design suitable for active everyday wear.',
       'colors': clothingColors,
@@ -365,10 +369,10 @@ class ProductData {
 
     // 14
     {
-      'id': 14,
+      'id': 'prod_014',
       'image':
           'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Nike',
+      'brandId': 'nike',
       'rating': '4.9',
       'reviews': '(342)',
       'name': 'Nike Running Shoes',
@@ -376,19 +380,19 @@ class ProductData {
       'oldPrice': '\$120.00',
       'discount': '-25%',
       'isFavorite': false,
-      'category': 'shoes',
+      'categoryId': 'shoes',
       'description':
-          'Comfortable lightweight running shoes designed with responsive cushioning for everyday movement.',
+          'Comfortable lightweight running shoes designed with responsive cushioning for everyday moveMent.',
       'colors': shoeColors,
       'sizes': shoeSizes,
     },
 
     // 15
     {
-      'id': 15,
+      'id': 'prod_015',
       'image':
           'https://static.nike.com/a/images/t_web_pw_592_v2/f_auto/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/4e54bf7d-6785-4601-81b6-16f550c4759c/JORDAN+1+RETRO+HIGH+OG+%28TD%29.png',
-      'brand': 'Nike',
+      'brandId': 'nike',
       'rating': '4.8',
       'reviews': '(198)',
       'name': 'Kids Sport Sneakers',
@@ -396,7 +400,7 @@ class ProductData {
       'oldPrice': '\$70.00',
       'discount': '-29%',
       'isFavorite': false,
-      'category': 'kids',
+      'categoryId': 'kids',
       'description':
           'Comfortable sport sneakers designed for kids with a lightweight construction and flexible sole.',
       'colors': kidsColors,
@@ -405,10 +409,10 @@ class ProductData {
 
     // 16
     {
-      'id': 16,
+      'id': 'prod_016',
       'image':
           'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Puma',
+      'brandId': 'puma',
       'rating': '4.7',
       'reviews': '(144)',
       'name': 'Puma Classic Sneakers',
@@ -416,7 +420,7 @@ class ProductData {
       'oldPrice': '\$95.00',
       'discount': '-26%',
       'isFavorite': false,
-      'category': 'shoes',
+      'categoryId': 'shoes',
       'description':
           'Classic comfortable sneakers featuring a clean sporty style for casual everyday outfits.',
       'colors': shoeColors,
@@ -425,10 +429,10 @@ class ProductData {
 
     // 17
     {
-      'id': 17,
+      'id': 'prod_017',
       'image':
           'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Levis',
+      'brandId': 'levis',
       'rating': '4.8',
       'reviews': '(167)',
       'name': 'Women Slim Fit Jeans',
@@ -436,7 +440,7 @@ class ProductData {
       'oldPrice': '\$79.99',
       'discount': '-31%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Classic slim fit denim jeans with a timeless design suitable for everyday casual styling.',
       'colors': clothingColors,
@@ -445,10 +449,10 @@ class ProductData {
 
     // 18
     {
-      'id': 18,
+      'id': 'prod_018',
       'image':
           'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Levis',
+      'brandId': 'levis',
       'rating': '4.7',
       'reviews': '(121)',
       'name': 'Classic Men Denim Jeans',
@@ -456,7 +460,7 @@ class ProductData {
       'oldPrice': '\$85.00',
       'discount': '-29%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Durable classic denim jeans with a comfortable fit and timeless everyday design.',
       'colors': clothingColors,
@@ -465,10 +469,10 @@ class ProductData {
 
     // 19
     {
-      'id': 19,
+      'id': 'prod_019',
       'image':
           'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Zara',
+      'brandId': 'zara',
       'rating': '4.6',
       'reviews': '(88)',
       'name': 'Elegant Women Blazer',
@@ -476,7 +480,7 @@ class ProductData {
       'oldPrice': '\$110.00',
       'discount': '-27%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Modern elegant blazer featuring a clean silhouette suitable for both casual and formal outfits.',
       'colors': clothingColors,
@@ -485,10 +489,10 @@ class ProductData {
 
     // 20
     {
-      'id': 20,
+      'id': 'prod_020',
       'image':
           'https://imgs.search.brave.com/TDFLdql1_2ZV8gmr1VqtxJCYWvSFofjata7Rfilb-Vw/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pLmVi/YXlpbWcuY29tL2lt/YWdlcy9nL21wTUFB/ZVN3OWZKcWhtUXYv/cy1sNDAwLndlYnA',
-      'brand': 'Zara',
+      'brandId': 'zara',
       'rating': '4.5',
       'reviews': '(76)',
       'name': 'Men Casual Shirt',
@@ -496,7 +500,7 @@ class ProductData {
       'oldPrice': '\$60.00',
       'discount': '-25%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Modern casual shirt with a comfortable fit and clean design for everyday styling.',
       'colors': clothingColors,
@@ -505,10 +509,10 @@ class ProductData {
 
     // 21
     {
-      'id': 21,
+      'id': 'prod_021',
       'image':
           'https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=600&q=80',
-      'brand': 'H&M',
+      'brandId': 'h_m',
       'rating': '4.6',
       'reviews': '(103)',
       'name': 'Kids Casual Outfit',
@@ -516,7 +520,7 @@ class ProductData {
       'oldPrice': '\$55.00',
       'discount': '-27%',
       'isFavorite': false,
-      'category': 'kids',
+      'categoryId': 'kids',
       'description':
           'Comfortable and stylish casual outfit designed for active everyday use by kids.',
       'colors': kidsColors,
@@ -525,10 +529,10 @@ class ProductData {
 
     // 22
     {
-      'id': 22,
+      'id': 'prod_022',
       'image':
           'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80',
-      'brand': 'H&M',
+      'brandId': 'h_m',
       'rating': '4.5',
       'reviews': '(92)',
       'name': 'Women Summer Dress',
@@ -536,7 +540,7 @@ class ProductData {
       'oldPrice': '\$70.00',
       'discount': '-29%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Lightweight comfortable summer dress featuring a modern casual design.',
       'colors': clothingColors,
@@ -545,10 +549,10 @@ class ProductData {
 
     // 23
     {
-      'id': 23,
+      'id': 'prod_023',
       'image':
           'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Uniqlo',
+      'brandId': 'uniqlo',
       'rating': '4.8',
       'reviews': '(231)',
       'name': 'Minimal Cotton Hoodie',
@@ -556,7 +560,7 @@ class ProductData {
       'oldPrice': '\$60.00',
       'discount': '-25%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Minimal comfortable cotton hoodie with a relaxed fit for everyday casual wear.',
       'colors': clothingColors,
@@ -565,10 +569,10 @@ class ProductData {
 
     // 24
     {
-      'id': 24,
+      'id': 'prod_024',
       'image':
           'https://images.unsplash.com/photo-1578681994506-b8f463449011?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Uniqlo',
+      'brandId': 'uniqlo',
       'rating': '4.7',
       'reviews': '(178)',
       'name': 'Women Basic Sweatshirt',
@@ -576,7 +580,7 @@ class ProductData {
       'oldPrice': '\$55.00',
       'discount': '-27%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Soft comfortable basic sweatshirt with a clean minimal style.',
       'colors': clothingColors,
@@ -585,10 +589,10 @@ class ProductData {
 
     // 25
     {
-      'id': 25,
+      'id': 'prod_025',
       'image':
           'https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&w=600&q=80',
-      'brand': 'New Balance',
+      'brandId': 'new_balance',
       'rating': '4.9',
       'reviews': '(289)',
       'name': 'New Balance Lifestyle Shoes',
@@ -596,7 +600,7 @@ class ProductData {
       'oldPrice': '\$140.00',
       'discount': '-29%',
       'isFavorite': false,
-      'category': 'shoes',
+      'categoryId': 'shoes',
       'description':
           'Premium lifestyle shoes combining everyday comfort with a modern sporty design.',
       'colors': shoeColors,
@@ -605,10 +609,10 @@ class ProductData {
 
     // 26
     {
-      'id': 26,
+      'id': 'prod_026',
       'image':
           'https://imgs.search.brave.com/Sx0dVnjdGo6sVfjp3ckPkfpy2blZ6uyr9OohpYXkbvw/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/bWVkaWEuYW1wbGll/bmNlLm5ldC9pL3Nj/dmwvMTUxOTAyXzM0/MjQzNl8xP2ZtdD1h/dXRvJnc9NjQw',
-      'brand': 'New Balance',
+      'brandId': 'new_balance',
       'rating': '4.8',
       'reviews': '(164)',
       'name': 'Kids Running Shoes',
@@ -616,7 +620,7 @@ class ProductData {
       'oldPrice': '\$75.00',
       'discount': '-27%',
       'isFavorite': false,
-      'category': 'kids',
+      'categoryId': 'kids',
       'description':
           'Lightweight and comfortable running shoes designed for active kids.',
       'colors': kidsColors,
@@ -625,10 +629,10 @@ class ProductData {
 
     // 27
     {
-      'id': 27,
+      'id': 'prod_027',
       'image':
-          'https://imgs.search.brave.com/A_1y5qdIrrn7ukDwAXzfwm7-mi3_NJrPJZSIG4CRWoo/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/ZHNtY2RuLmNvbS9t/bnJlc2l6ZS80MDAv/LS90eTE4MDIvcHJv/ZC9RQ19QUkVQLzIw/MjUxMjE1LzA1L2Qw/ZjBjYTM0LWQzY2It/M2Q4MS1hNDE0LTZj/NGQxZTZlYTBmYi8x/X29yZ196b29tLmpw/Zw',
-      'brand': 'Under Armour',
+          'https://imgs.search.brave.com/A_1y5qdIrrn7ukDwAXzfwm7-mi3_NJrPJZSIG4CRWoo/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/ZHNtY2RuLmNvbS9t/bnJlc2l6ZS80MDAv/LS90eTE4MDIvcHJv/ZC9RQ19QUkVQLzIw/MjUxMjE1LzA1L2Qw/ZjBjYTM0LWQzY2It/M2Q4MS1hNDE0LTZj/NGQxZTZlYTBmYi8x/X29yZ196b29tLmpwZw',
+      'brandId': 'under-armor',
       'rating': '4.9',
       'reviews': '(276)',
       'name': 'Training Sports T-Shirt',
@@ -636,7 +640,7 @@ class ProductData {
       'oldPrice': '\$50.00',
       'discount': '-30%',
       'isFavorite': false,
-      'category': 'men',
+      'categoryId': 'men',
       'description':
           'Performance sports t-shirt designed with lightweight breathable fabric for training.',
       'colors': clothingColors,
@@ -645,10 +649,10 @@ class ProductData {
 
     // 28
     {
-      'id': 28,
+      'id': 'prod_028',
       'image':
           'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Under Armour',
+      'brandId': 'under-armor',
       'rating': '4.8',
       'reviews': '(195)',
       'name': 'Women Training Set',
@@ -656,7 +660,7 @@ class ProductData {
       'oldPrice': '\$110.00',
       'discount': '-27%',
       'isFavorite': false,
-      'category': 'women',
+      'categoryId': 'women',
       'description':
           'Comfortable high performance training set designed for active workouts.',
       'colors': clothingColors,
@@ -665,10 +669,10 @@ class ProductData {
 
     // 29
     {
-      'id': 29,
+      'id': 'prod_029',
       'image':
           'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Rip Curl',
+      'brandId': 'rip_curl',
       'rating': '4.9',
       'reviews': '(142)',
       'name': 'Surf Wetsuit',
@@ -676,7 +680,7 @@ class ProductData {
       'oldPrice': '\$180.00',
       'discount': '-28%',
       'isFavorite': false,
-      'category': 'wetsuits',
+      'categoryId': 'wetsuits',
       'description':
           'Flexible surf wetsuit designed to provide comfort and performance during water activities.',
       'colors': wetsuitColors,
@@ -685,10 +689,10 @@ class ProductData {
 
     // 30
     {
-      'id': 30,
+      'id': 'prod_030',
       'image':
           'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=600&q=80',
-      'brand': 'Rip Curl',
+      'brandId': 'rip_curl',
       'rating': '4.7',
       'reviews': '(97)',
       'name': 'Professional Surf Board',
@@ -696,7 +700,7 @@ class ProductData {
       'oldPrice': '\$399.99',
       'discount': '-25%',
       'isFavorite': false,
-      'category': 'boards',
+      'categoryId': 'boards',
       'description':
           'Professional surf board designed for smooth performance and reliable control in the water.',
       'colors': boardColors,
@@ -705,6 +709,8 @@ class ProductData {
   ];
 
   List<ProductModel> get productsList {
-    return _productsJson.map((json) => ProductModel.fromJson(json)).toList();
+    return _productsJson
+        .map((json) => ProductModel.fromJson(json))
+        .toList();
   }
 }

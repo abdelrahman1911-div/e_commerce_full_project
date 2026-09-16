@@ -1,24 +1,23 @@
 import 'package:e_commerce_full_project/features/Categoriesscreen/data/categories_data.dart';
-import 'package:e_commerce_full_project/features/Categoriesscreen/data/category_model.dart';
-import 'package:e_commerce_full_project/features/brandscreen/brand/brand_data.dart';
-import 'package:e_commerce_full_project/features/brandscreen/brand/brand_model.dart';
+import 'package:e_commerce_full_project/features/Categoriesscreen/data/models/category_model.dart';
+import 'package:e_commerce_full_project/features/brandscreen/brand/data/models/brand_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class BrandCategoriesWidget extends StatefulWidget { 
- final  BrandModel? brandModel;
-  final bool isCategories; 
-  final CategoryModel? categoryModel;   
-  final bool isSelected; 
-  final VoidCallback onTap; 
-const  BrandCategoriesWidget({
+class BrandCategoriesWidget extends StatefulWidget {
+  final BrandModel? brandModel;
+  final bool isCategories;
+  final CategoryModel? categoryModel;
+  final bool isSelected;
+  final VoidCallback onTap;
+  const BrandCategoriesWidget({
     super.key,
-     this.brandModel,
-    required this.isSelected, 
-    required this.isCategories,  
-    required this.onTap, 
-    this.categoryModel
+    this.brandModel,
+    required this.isSelected,
+    required this.isCategories,
+    required this.onTap,
+    this.categoryModel,
   });
   @override
   State<BrandCategoriesWidget> createState() => _BrandCategoriesWidgetState();
@@ -27,8 +26,7 @@ const  BrandCategoriesWidget({
 class _BrandCategoriesWidgetState extends State<BrandCategoriesWidget> {
   late String selectedBrand;
   String? selectedCategoryName;
-  final BrandData cat = BrandData(); 
-  final CategoriesData categories = CategoriesData(); 
+  final CategoriesData categories = CategoriesData();
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -37,7 +35,7 @@ class _BrandCategoriesWidgetState extends State<BrandCategoriesWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          GestureDetector( 
+          GestureDetector(
             onTap: widget.onTap,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 250),
@@ -59,9 +57,10 @@ class _BrandCategoriesWidgetState extends State<BrandCategoriesWidget> {
                   color: Colors.grey[200],
                 ),
                 child: ClipOval(
-                  child: Image.network( 
-                    widget.isCategories ? widget.categoryModel!.image :  
-                    widget.brandModel!.image,
+                  child: Image.network(
+                    widget.isCategories
+                        ? widget.categoryModel!.image
+                        : widget.brandModel!.image,
                     fit: BoxFit.cover,
                     width: 65.w,
                     height: 65.w,
@@ -74,9 +73,10 @@ class _BrandCategoriesWidgetState extends State<BrandCategoriesWidget> {
             ),
           ),
           SizedBox(height: 6.h),
-          Text( 
-            widget.isCategories ? widget.categoryModel!.name.tr() : 
-            widget.brandModel!.name.tr(),
+          Text(
+            widget.isCategories
+                ? widget.categoryModel!.name.tr()
+                : widget.brandModel!.name.tr(),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: widget.isSelected ? FontWeight.w700 : FontWeight.w500,

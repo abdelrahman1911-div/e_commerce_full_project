@@ -1,22 +1,50 @@
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SizesWidget extends StatefulWidget {
   final ProductModel prod;
-  const SizesWidget({super.key, required this.prod});
+
+  final ValueChanged<String> onSizeSelected;
+
+  const SizesWidget({
+    super.key,
+    required this.prod,
+    required this.onSizeSelected,
+  });
 
   @override
   State<SizesWidget> createState() => _SizesWidgetState();
 }
 
 class _SizesWidgetState extends State<SizesWidget> {
-  String selectedSize = 'L';
+  String? selectedSize;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Select the first available size by default.
+    for (final item in widget.prod.sizes) {
+      if (item.isAvailable) {
+        selectedSize = item.label;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          widget.onSizeSelected(item.label);
+        });
+
+        break;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
-      padding: EdgeInsetsGeometry.only(left: 16.0.w),
+      padding: EdgeInsets.only(left: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,23 +52,30 @@ class _SizesWidgetState extends State<SizesWidget> {
             'sizes'.tr(),
             style: TextStyle(
               fontSize: 14.sp,
-              color: Theme.of(context).colorScheme.onSurface,
+              color: colorScheme.onSurface,
               fontWeight: FontWeight.w700,
             ),
           ),
 
           SizedBox(height: 6.h),
+
           Row(
             children: widget.prod.sizes.map((item) {
               final String sizeLabel = item.label;
+
               final bool isAvailable = item.isAvailable;
-              final bool isSelected = selectedSize == sizeLabel;
+
+              final bool isSelected =
+                  selectedSize == sizeLabel;
+
               return GestureDetector(
                 onTap: isAvailable
                     ? () {
                         setState(() {
                           selectedSize = sizeLabel;
                         });
+
+                        widget.onSizeSelected(sizeLabel);
                       }
                     : null,
                 child: Container(
@@ -49,18 +84,16 @@ class _SizesWidgetState extends State<SizesWidget> {
                   height: 42.h,
                   decoration: BoxDecoration(
                     color: !isAvailable
-                        ? Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withOpacity(0.05)
+                        ? colorScheme.onSurface
+                            .withOpacity(0.05)
                         : isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.surface,
+                            ? colorScheme.primary
+                            : colorScheme.surface,
                     border: Border.all(
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(
-                              context,
-                            ).colorScheme.onSurface.withOpacity(0.15),
+                          ? colorScheme.primary
+                          : colorScheme.onSurface
+                              .withOpacity(0.15),
                     ),
                   ),
                   child: Center(
@@ -72,9 +105,8 @@ class _SizesWidgetState extends State<SizesWidget> {
                                 sizeLabel,
                                 style: TextStyle(
                                   fontSize: 13.sp,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withOpacity(0.3),
+                                  color: colorScheme.onSurface
+                                      .withOpacity(0.3),
                                 ),
                               ),
                               Transform.rotate(
@@ -82,9 +114,8 @@ class _SizesWidgetState extends State<SizesWidget> {
                                 child: Container(
                                   width: 35.w,
                                   height: 1.h,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withOpacity(0.15),
+                                  color: colorScheme.onSurface
+                                      .withOpacity(0.15),
                                 ),
                               ),
                             ],
@@ -95,8 +126,8 @@ class _SizesWidgetState extends State<SizesWidget> {
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w600,
                               color: isSelected
-                                  ? Theme.of(context).colorScheme.onPrimary
-                                  : Theme.of(context).colorScheme.onSurface,
+                                  ? colorScheme.onPrimary
+                                  : colorScheme.onSurface,
                             ),
                           ),
                   ),

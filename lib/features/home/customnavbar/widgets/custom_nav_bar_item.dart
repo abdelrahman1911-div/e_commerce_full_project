@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomNavBarItem extends StatefulWidget {  
-   
-   
     final int currentIndex;     
     final IconData icon; 
     final int index; 

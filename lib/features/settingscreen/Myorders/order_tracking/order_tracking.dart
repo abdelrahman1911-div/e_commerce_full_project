@@ -4,12 +4,14 @@ import 'package:e_commerce_full_project/features/settingscreen/Myorders/order_tr
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class OrderTracking extends StatefulWidget {
   final String orderId;
   const OrderTracking({super.key, required this.orderId});
   @override
   State<OrderTracking> createState() => _OrderTrackingState();
 }
+
 class _OrderTrackingState extends State<OrderTracking> {
   @override
   Widget build(BuildContext context) {
@@ -40,9 +42,9 @@ class _OrderTrackingState extends State<OrderTracking> {
                     style: theme.textTheme.titleMedium,
                   ),
                   SizedBox(height: 10.h),
-                  OrderDetailsWidget(orderid: widget.orderId), 
+                  OrderDetailsWidget(orderid: widget.orderId),
                   SizedBox(height: 20.h),
-                  TrackingWidget()
+                  TrackingWidget(orderid: widget.orderId),
                 ],
               ),
             ),

@@ -1,4 +1,4 @@
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:e_commerce_full_project/core/widgets/product_card.dart';
 import 'package:flutter/material.dart';

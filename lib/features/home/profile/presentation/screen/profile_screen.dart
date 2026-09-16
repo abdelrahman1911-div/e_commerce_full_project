@@ -7,7 +7,7 @@ import 'package:e_commerce_full_project/features/home/profile/presentation/cubit
 import 'package:e_commerce_full_project/features/home/profile/presentation/widgets/personal_info_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/myorders_screen.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/screen/myorders_screen.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/paymentPerferences_screen.dart';
 import 'package:e_commerce_full_project/features/home/profile/presentation/widgets/settings_card.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +17,9 @@ import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
-
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
-
 class _ProfileScreenState extends State<ProfileScreen> { 
   void initState() {
   super.initState();

@@ -1,95 +1,211 @@
-import 'package:e_commerce_full_project/features/home/product/product_model.dart';
+import 'dart:developer';
+import 'package:e_commerce_full_project/features/home/mycart/data/model/cart_item_model.dart';
+import 'package:e_commerce_full_project/features/home/mycart/domain/cart_repo.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CartCubit extends Cubit<List<ProductModel>> {
-  CartCubit() : super([]);
+// ============================================================
+// STATES
+// ============================================================
 
+abstract class CartState extends Equatable {
+  const CartState();
 
-  void addToCart(ProductModel product) {
-    final updatedCart = [...state];
+  @override
+  List<Object?> get props => [];
+}
 
-    final index = updatedCart.indexWhere(
-      (item) => item.id == product.id,
-    );
+class CartInitial extends CartState {}
 
-    if (index != -1) {
-      final currentProduct = updatedCart[index];
+class CartLoading extends CartState {}
 
-      updatedCart[index] = currentProduct.copyWith(
-        quantity: currentProduct.quantity +1 ,
-      );
-    } else {
-      updatedCart.add(
-        product.copyWith(
-          quantity: 1,
+class CartLoaded extends CartState {
+  final List<CartItemModel> items;
+
+  const CartLoaded(this.items);
+
+  @override
+  List<Object?> get props => [items];
+}
+
+class CartError extends CartState {
+  final String message;
+
+  const CartError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+// ============================================================
+// CUBIT
+// ============================================================
+
+class CartCubit extends Cubit<CartState> {
+  final CartRepository _cartRepository;
+
+  CartCubit(this._cartRepository) : super(CartInitial());
+
+  List<CartItemModel> cartItems = [];
+
+  // ============================================================
+  // GET CART
+  // ============================================================
+
+  Future<void> getCart() async {
+    emit(CartLoading());
+
+    try {
+      final items = await _cartRepository.getCart();
+
+      cartItems = items;
+
+      emit(
+        CartLoaded(
+          List<CartItemModel>.from(cartItems),
         ),
       );
-    }
 
-    emit(updatedCart);
-  }
+      log(
+        'Cart loaded successfully: ${cartItems.length} items',
+      );
+    } catch (e) {
+      log('Failed to load cart: $e');
 
-
-  void increaseQuantity(ProductModel product) {
-    final updatedCart = [...state];
-
-    final index = updatedCart.indexWhere(
-      (item) => item.id == product.id,
-    );
-
-    if (index != -1) {
-      final currentProduct = updatedCart[index];
-
-      updatedCart[index] = currentProduct.copyWith(
-        quantity: currentProduct.quantity + 1,
+      emit(
+        CartError(e.toString()),
       );
     }
-
-    emit(updatedCart);
   }
 
+  // ============================================================
+  // ADD TO CART
+  // ============================================================
 
-  void decreaseQuantity(ProductModel product) {
-    final updatedCart = [...state];
+  Future<void> addToCart({
+    required String productId,
+    String? selectedColor,
+    String? selectedSize,
+  }) async {
+    try {
+      await _cartRepository.addToCart(
+        productId,
+        selectedColor,
+        selectedSize,
+      );
 
-    final index = updatedCart.indexWhere(
-      (item) => item.id == product.id,
-    );
+      await getCart();
 
-    if (index != -1) {
-      final currentProduct = updatedCart[index];
+      log(
+        'Product added to cart successfully: '
+        '$productId | '
+        'color: $selectedColor | '
+        'size: $selectedSize',
+      );
+    } catch (e) {
+      log('Failed to add product to cart: $e');
 
-      if (currentProduct.quantity > 1) {
-        updatedCart[index] = currentProduct.copyWith(
-          quantity: currentProduct.quantity - 1,
-        );
-      } else {
-        updatedCart.removeAt(index);
-      }
+      emit(
+        CartError(e.toString()),
+      );
     }
-
-    emit(updatedCart);
   }
 
-  // =========================
-  // REMOVE FROM CART
-  // =========================
+  // ============================================================
+  // INCREASE QUANTITY
+  // ============================================================
 
-  void removeFromCart(ProductModel product) {
-    final updatedCart = [...state];
+  Future<void> increaseQuantity(String cartItemId) async {
+    try {
+      await _cartRepository.increaseQuantity(cartItemId);
 
-    updatedCart.removeWhere(
-      (item) => item.id == product.id,
-    );
+      await getCart();
 
-    emit(updatedCart);
+      log(
+        'Cart quantity increased: $cartItemId',
+      );
+    } catch (e) {
+      log(
+        'Failed to increase cart quantity: $e',
+      );
+
+      emit(
+        CartError(e.toString()),
+      );
+    }
   }
 
-  // =========================
+  // ============================================================
+  // DECREASE QUANTITY
+  // ============================================================
+
+  Future<void> decreaseQuantity(String cartItemId) async {
+    try {
+      await _cartRepository.decreaseQuantity(cartItemId);
+
+      await getCart();
+
+      log(
+        'Cart quantity decreased: $cartItemId',
+      );
+    } catch (e) {
+      log(
+        'Failed to decrease cart quantity: $e',
+      );
+
+      emit(
+        CartError(e.toString()),
+      );
+    }
+  }
+
+  // ============================================================
+  // REMOVE
+  // ============================================================
+
+  Future<void> removeFromCart(String cartItemId) async {
+    try {
+      await _cartRepository.removeFromCart(cartItemId);
+
+      await getCart();
+
+      log(
+        'Product removed from cart successfully: $cartItemId',
+      );
+    } catch (e) {
+      log(
+        'Failed to remove product from cart: $e',
+      );
+
+      emit(
+        CartError(e.toString()),
+      );
+    }
+  }
+
+  // ============================================================
   // CLEAR CART
-  // =========================
+  // ============================================================
 
-  void clearCart() {
-    emit([]);
+  Future<void> clearCart() async {
+    try {
+      await _cartRepository.clearCart();
+
+      cartItems = [];
+
+      emit(
+        const CartLoaded([]),
+      );
+
+      log('Cart cleared successfully');
+    } catch (e) {
+      log(
+        'Failed to clear cart: $e',
+      );
+
+      emit(
+        CartError(e.toString()),
+      );
+    }
   }
 }

@@ -1,5 +1,5 @@
 
-import 'package:e_commerce_full_project/features/Categoriesscreen/data/category_model.dart';
+import 'package:e_commerce_full_project/features/Categoriesscreen/data/models/category_model.dart';
 
 class CategoriesData {
  
