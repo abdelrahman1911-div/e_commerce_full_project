@@ -1,3 +1,4 @@
+import 'package:e_commerce_full_project/core/errors/widget/user_error_overlay.dart';
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
 import 'package:e_commerce_full_project/core/styling/app_text_styles.dart';
 import 'package:e_commerce_full_project/features/auth/presentations/cubit/auth_cubit.dart';
@@ -58,13 +59,15 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
       address: addressController.text.trim(),
     );
     await context.read<UserCubit>().updateUser(updatedUser);
+    UserErrorOverlay.show(  
+    context, 
+     message : 'personal_information.updated_successfully'.tr(),
+      isSuccess: true,
+    );
     if (!mounted) return;
     setState(() {
       isEditing = false;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('personal_information.updated_successfully'.tr())),
-    );
   }
 
   void initState() {

@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:e_commerce_full_project/core/errors/widget/user_error_overlay.dart';
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
 import 'package:e_commerce_full_project/core/widgets/couustom_text_field_widget.dart';
 import 'package:e_commerce_full_project/core/widgets/custom_button.dart';
@@ -23,13 +24,10 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  // Controllers
   final TextEditingController oldpass = TextEditingController();
   final TextEditingController newpass = TextEditingController();
-  final TextEditingController newpassVerified =
-      TextEditingController();
+  final TextEditingController newpassVerified = TextEditingController();
 
-  // Error messages
   String oldPasswordError = '';
   String newPasswordError = '';
   String verifyPasswordError = '';
@@ -51,41 +49,30 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     bool hasError = false;
 
-    // Current password
-    if (!widget.isForgotPassword &&
-        oldpass.text.trim().isEmpty) {
-      oldPasswordError =
-          'please_enter_current_password'.tr();
+    if (!widget.isForgotPassword && oldpass.text.trim().isEmpty) {
+      oldPasswordError = 'please_enter_current_password'.tr();
       hasError = true;
     }
 
-    // New password
     if (newpass.text.trim().isEmpty) {
-      newPasswordError =
-          'please_enter_new_password'.tr();
+      newPasswordError = 'please_enter_new_password'.tr();
       hasError = true;
     } else if (newpass.text.length < 8) {
-      newPasswordError =
-          'password_min_eight'.tr();
+      newPasswordError = 'password_min_eight'.tr();
       hasError = true;
     } else if (!RegExp(r'[A-Z]').hasMatch(newpass.text)) {
-      newPasswordError =
-          'password_uppercase'.tr();
+      newPasswordError = 'password_uppercase'.tr();
       hasError = true;
     } else if (!RegExp(r'[0-9]').hasMatch(newpass.text)) {
-      newPasswordError =
-          'password_number'.tr();
+      newPasswordError = 'password_number'.tr();
       hasError = true;
     }
 
-    // Confirm password
     if (newpassVerified.text.trim().isEmpty) {
-      verifyPasswordError =
-          'please_verify_new_password'.tr();
+      verifyPasswordError = 'please_verify_new_password'.tr();
       hasError = true;
     } else if (newpassVerified.text != newpass.text) {
-      verifyPasswordError =
-          'passwords_do_not_match'.tr();
+      verifyPasswordError = 'passwords_do_not_match'.tr();
       hasError = true;
     }
 
@@ -94,7 +81,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return;
     }
 
-    // Forgot password has a different Firebase flow.
     if (widget.isForgotPassword) {
       context.go(AppRoutes.login);
       return;
@@ -109,27 +95,34 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthUnauthenticated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'password_changed_successfully'.tr(),
-              ),
-            ),
+          UserErrorOverlay.show(
+            context,
+            message: 'password_changed_successfully'.tr(),
+            isSuccess: true,
           );
+
+          await Future.delayed(
+            const Duration(milliseconds: 1500),
+          );
+
+          if (!mounted) return;
+
           context.go(AppRoutes.login);
         }
+
         if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
+          UserErrorOverlay.show(
+            context,
+            message: state.message.tr(),
+            isSuccess: false,
           );
         }
       },
       builder: (context, state) {
         final isLoading = state is AuthLoading;
+
         return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -175,9 +168,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     buttonText: widget.isForgotPassword
                         ? 'reset_password'.tr()
                         : 'change_password'.tr(),
-                    onPressed: isLoading
-                        ? null
-                        : _validateAndSubmit,
+                    onPressed: isLoading ? null : _validateAndSubmit,
                   ),
                 ],
               ),

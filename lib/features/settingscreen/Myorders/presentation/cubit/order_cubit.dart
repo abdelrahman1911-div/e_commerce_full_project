@@ -50,7 +50,6 @@ class OrderCubit extends Cubit<List<OrderModel>> {
       log('Order added successfully: ${order.id}');
     } catch (e) {
       log('Failed to add order: $e');
-
       rethrow;
     }
   }
@@ -59,8 +58,9 @@ class OrderCubit extends Cubit<List<OrderModel>> {
     try {
       await _orderRepository.removeOrder(orderId);
 
-      final updatedOrders =
-          state.where((order) => order.id != orderId).toList();
+      final updatedOrders = state
+          .where((order) => order.id != orderId)
+          .toList();
 
       emit(updatedOrders);
 

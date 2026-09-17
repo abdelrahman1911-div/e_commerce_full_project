@@ -1,3 +1,4 @@
+import 'package:e_commerce_full_project/core/errors/widget/user_error_overlay.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/cubit/pay_pref_states.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/cubit/payment_preference_services.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/widgets/payment_preference_content.dart';
@@ -38,7 +39,8 @@ class _PaymentPreferenceView extends StatelessWidget {
             body: Center(
               child: ElevatedButton(
                 onPressed: () {
-                  context.read<PaymentPreferenceCubit>().loadPaymentMethod();
+                  context.read<PaymentPreferenceCubit>().loadPaymentMethod(); 
+               
                 },
                 child: const Text('Retry'),
               ),

@@ -18,7 +18,7 @@ import 'package:e_commerce_full_project/features/Categoriesscreen/presentation/s
 import 'package:e_commerce_full_project/features/CheckOut/checkout_screen.dart';
 import 'package:e_commerce_full_project/features/CheckOut/order_success/order_success_screen.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/screen/myorders_screen.dart';
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/order_tracking/order_tracking.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/widget/order_tracking/order_tracking.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/paymentPerferences_screen.dart';
 import 'package:e_commerce_full_project/features/settingscreen/addressScreen/address_screen.dart';
 import 'package:e_commerce_full_project/features/brandscreen/brand/presentations/screens/brand_screen.dart';
@@ -99,14 +99,16 @@ GoRouter createAppRouter(AuthCubit authCubit, bool onboardingComplete) {
   // ============================================================
 
   if (authState is AuthSuccess) {
-    if (isLogin ||
-        isRegister ||
-        isSplash) {
-      return AppRoutes.home;
-    }
+  if (isRegister || isSplash) {
+    return AppRoutes.home;
+  }
 
+  if (isLogin) {
     return null;
   }
+
+  return null;
+} 
 
   // ============================================================
   // AUTH ERROR

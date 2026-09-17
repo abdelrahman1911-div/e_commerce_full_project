@@ -1,5 +1,5 @@
 import 'package:e_commerce_full_project/core/widgets/custom_button.dart';
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/order_tracking/order_tracking.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/widget/order_tracking/order_tracking.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

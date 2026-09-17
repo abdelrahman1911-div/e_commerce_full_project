@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce_full_project/features/home/homescreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
 import 'package:e_commerce_full_project/core/styling/app_text_styles.dart';
@@ -143,7 +144,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+          (route) => false,
+        );
+      },
+      child: Scaffold(
       appBar: AppBar(
         title: Text('checkout'.tr(), style: AppTextStyles.headline(context)),
         backgroundColor: theme.scaffoldBackgroundColor,
@@ -375,6 +389,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 },
               ),
       ),
-    );
+    ));
   }
 }

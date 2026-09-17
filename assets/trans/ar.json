@@ -223,6 +223,25 @@
   "back_to_login": "العودة لتسجيل الدخول",
   "please_enter_email": "من فضلك أدخل البريد الإلكتروني.",
   "please_enter_valid_email": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا.", 
-    "Please_choose_size_color" : "من فضلك اختر اللون و المقاس المناسب"
+    "Please_choose_size_color" : "من فضلك اختر اللون و المقاس المناسب", 
+    "Loged_in_successfly" : "لقد قمت ب تسجيل الدخول بنجاح", 
+    "email_already_in_use": "البريد الإلكتروني مستخدم بالفعل",
+  "invalid_email": "صيغة البريد الإلكتروني غير صحيحة",
+  "weak_password": "كلمة المرور ضعيفة جداً",
+  "wrong_password": "كلمة المرور غير صحيحة",
+  "invalid_credential": "بيانات الدخول غير صحيحة",
+  "user_not_found": "لا يوجد حساب مسجل بهذا البريد",
+  "user_disabled": "تم تعطيل هذا الحساب",
+  "too_many_requests": "محاولات كثيرة خاطئة، يرجى المحاولة لاحقاً",
+  "operation_not_allowed": "هذه العملية غير مفعّلة حالياً",
+  "account_exists_with_different_credential": "يوجد حساب بالفعل مربوط بطريقة تسجيل أخرى",
+  "no_internet": "لا يوجد اتصال بالإنترنت",
+  "requires_recent_login": "يرجى إعادة تسجيل الدخول لمتابعة الإجراء",
+  "session_expired": "انتهت الجلسة، يرجى تسجيل الدخول مجدداً",
+  "something_went_wrong": "حدث خطأ غير متوقع، يرجى المحاولة لاحقاً", 
+  "payment_pref_saved" : "تم اختيار وسيله الدفع بنجاح", 
+  "registered_successfly" : "قمت بعمل حساب جديد", 
+  "add_profile_photo_optional": "إضافة صورة شخصية (اختياري)", 
+  "enter_your_phone_number": "أدخل رقم هاتفك"
 
 }

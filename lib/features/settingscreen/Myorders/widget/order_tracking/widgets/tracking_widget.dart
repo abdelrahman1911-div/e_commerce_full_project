@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/models/orderModel.dart';
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/order_tracking/widgets/tracking_step_widget.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/widget/order_tracking/widgets/tracking_step_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

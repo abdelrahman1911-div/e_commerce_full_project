@@ -1,7 +1,7 @@
 import 'package:e_commerce_full_project/core/widgets/List_view_widget.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/models/orderModel.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/order_cubit.dart';
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/order_tracking/widgets/order_product_item.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/widget/order_tracking/widgets/order_product_item.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

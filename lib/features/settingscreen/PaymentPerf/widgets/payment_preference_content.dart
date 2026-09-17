@@ -1,3 +1,4 @@
+import 'package:e_commerce_full_project/core/errors/widget/user_error_overlay.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/cubit/pay_pref_states.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/cubit/payment_preference_services.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/widgets/payment_options.dart';
@@ -90,8 +91,15 @@ class PaymentPreferenceContent extends StatelessWidget {
               width: double.infinity,
               height: 52,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
+                onPressed: () { 
+                    UserErrorOverlay.show(
+        context,
+        message: 'payment_pref_saved'.tr(),
+        isSuccess: true,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
                 },
                 child: Text(
                   'payment_preference.save_preference'.tr(),

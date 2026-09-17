@@ -1,3 +1,4 @@
+import 'package:e_commerce_full_project/core/errors/widget/user_error_overlay.dart';
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
 import 'package:e_commerce_full_project/core/widgets/custom_button.dart';
 import 'package:e_commerce_full_project/features/auth/presentations/cubit/auth_cubit.dart';
@@ -223,12 +224,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       return;
                     }
                     Navigator.pop(dialogContext);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'language_changed'.tr(args: [temporaryLanguage]),
-                        ),
-                      ),
+                    UserErrorOverlay.show(
+                      context,
+                      message: 'language_changed'.tr(args: [temporaryLanguage]),
+                      isSuccess: true,
                     );
                   },
                   child: Text('save'.tr()),
@@ -241,44 +240,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // ===========================================================
-  // LOGOUT DIALOG
-  // ===========================================================
-
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
           title: Text('logout_question'.tr()),
-
           content: Text('logout_confirmation'.tr()),
-
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(dialogContext);
               },
-
               child: Text('cancel'.tr()),
             ),
-
             TextButton(
-              onPressed: () async {
-                await context.read<AuthCubit>().logout();
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'logged_out_successfully'.tr(),
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelSmall!.copyWith(color: Colors.red),
-                    ),
-                  ),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                UserErrorOverlay.show(
+                  context,
+                  isSuccess: true,
+                  message: 'logged_out_successfully'.tr(),
+                  barrierDismissible: false,
+                  onPressed: () {
+                    context.read<AuthCubit>().logout();
+                  },
                 );
               },
-
               child: Text(
                 'logout'.tr(),
                 style: const TextStyle(

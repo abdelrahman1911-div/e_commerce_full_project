@@ -6,16 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CategoryCubit extends Cubit<CategoryState> {
   final CategoryRepo _categoryRepository;
 
-  CategoryCubit(this._categoryRepository)
-      : super(CategoryInitial());
+  CategoryCubit(this._categoryRepository) : super(CategoryInitial());
 
   Future<void> getAllCategories() async {
     emit(CategoryLoading());
 
     try {
-      final categories =
-          await _categoryRepository.getAllCategories();
-
+      final categories = await _categoryRepository.getAllCategories();
       emit(CategorySuccess(categories));
     } catch (e) {
       emit(CategoryError(e.toString()));
@@ -30,7 +27,7 @@ class CategoryCubit extends Cubit<CategoryState> {
           await _categoryRepository.getCategoryById(categoryId);
 
       if (category == null) {
-        emit(const CategoryError('Category not found'));
+        emit(const CategoryError('category_not_found'));
         return;
       }
 
@@ -45,7 +42,6 @@ class CategoryCubit extends Cubit<CategoryState> {
 
     try {
       await _categoryRepository.addCategory(category);
-
       emit(CategoryOperationSuccess());
     } catch (e) {
       emit(CategoryError(e.toString()));
@@ -57,7 +53,6 @@ class CategoryCubit extends Cubit<CategoryState> {
 
     try {
       await _categoryRepository.updateCategory(category);
-
       emit(CategoryOperationSuccess());
     } catch (e) {
       emit(CategoryError(e.toString()));
@@ -69,7 +64,6 @@ class CategoryCubit extends Cubit<CategoryState> {
 
     try {
       await _categoryRepository.deleteCategory(categoryId);
-
       emit(CategoryOperationSuccess());
     } catch (e) {
       emit(CategoryError(e.toString()));

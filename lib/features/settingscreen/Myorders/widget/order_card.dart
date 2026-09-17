@@ -1,6 +1,7 @@
+import 'package:e_commerce_full_project/core/errors/widget/user_error_overlay.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/models/orderModel.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/order_cubit.dart';
-import 'package:e_commerce_full_project/features/settingscreen/Myorders/order_tracking/order_tracking.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/widget/order_tracking/order_tracking.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -212,9 +213,7 @@ class OrderCard extends StatelessWidget {
 
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.red,
-
                     side: const BorderSide(color: Colors.red),
-
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -245,10 +244,10 @@ class OrderCard extends StatelessWidget {
               onPressed: () {
                 context.read<OrderCubit>().removeOrder(order.id);
                 Navigator.pop(dialogContext);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('my_orders.cancelled_successfully'.tr()),
-                  ),
+                UserErrorOverlay.show(
+                  context,
+                  message: 'my_orders.cancelled_successfully'.tr(),
+                  isSuccess: true,
                 );
               },
               child: Text(
