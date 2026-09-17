@@ -100,7 +100,7 @@ class _ProductWidgetState extends State<ProductWidget> {
               ],
             ),
 
-            SizedBox(height: 3.h),
+            SizedBox(height: 1.h),
 
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,

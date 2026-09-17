@@ -3,8 +3,10 @@ import 'package:e_commerce_full_project/core/styling/app_text_styles.dart';
 import 'package:e_commerce_full_project/core/widgets/couustom_text_field_widget.dart';
 import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
 import 'package:e_commerce_full_project/core/theme/themeController.dart';
+import 'package:e_commerce_full_project/features/search/presentation/cubit/search_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -91,7 +93,10 @@ class _AppBarProdHomeState extends State<AppBarProdHome> {
               isSearchTextField: true,
               controller: widget.sear!,
               hintText: 'search'.tr(),
-              icon: const Icon(Icons.search_outlined),
+              icon: const Icon(Icons.search_outlined), 
+              onChanged:(value) {
+                context.read<SearchCubit>().search(value); 
+              } ,
             )
           : Text(widget.prod?.name ?? '', style: AppTextStyles.title(context)),
       actions: [

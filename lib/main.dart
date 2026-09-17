@@ -19,6 +19,7 @@ import 'package:e_commerce_full_project/features/home/mycart/cubit/mycart_cubit.
 import 'package:e_commerce_full_project/features/home/product/presentation/cubit/prod_cubit.dart';
 import 'package:e_commerce_full_project/features/home/profile/data/repos/user_repo_impl.dart';
 import 'package:e_commerce_full_project/features/home/profile/presentation/cubit/user_cubit.dart';
+import 'package:e_commerce_full_project/features/search/presentation/cubit/search_cubit.dart';
 
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/order_cubit.dart';
 
@@ -82,7 +83,8 @@ Future<void> main() async {
            create: (_) => ProductCubit(
              InjectionContainer.productRepository,
            ),
-         ),
+         ), 
+         BlocProvider<SearchCubit>( create: (_) => SearchCubit(), ),
           BlocProvider<CategoryCubit>(create: (_) => CategoryCubit(InjectionContainer.categoryRepository)), 
           BlocProvider<BrandCubit>(create: (_) => BrandCubit(InjectionContainer.brandRepository,)), 
           BlocProvider<UserCubit>(
