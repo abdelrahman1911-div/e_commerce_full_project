@@ -1,137 +1,156 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_commerce_full_project/features/changepassword/forgotpassword/forgot_password_screen.dart';
-import 'package:e_commerce_full_project/features/home/profile/data/repos/user_repo_impl.dart';
-import 'package:e_commerce_full_project/features/home/profile/presentation/cubit/user_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
+import 'package:e_commerce_full_project/features/All_categories_brands/all_Item_screen.dart';
+import 'package:e_commerce_full_project/features/All_categories_brands/all_categorise_screen.dart';
+import 'package:e_commerce_full_project/features/Categoriesscreen/presentation/screen/categorise_screen.dart';
+import 'package:e_commerce_full_project/features/CheckOut/checkout_screen.dart';
+import 'package:e_commerce_full_project/features/CheckOut/order_success/order_success_screen.dart';
 import 'package:e_commerce_full_project/features/auth/presentations/cubit/auth_cubit.dart';
 import 'package:e_commerce_full_project/features/auth/presentations/cubit/auth_state.dart';
 import 'package:e_commerce_full_project/features/auth/presentations/screens/loginscreen.dart';
 import 'package:e_commerce_full_project/features/auth/register/presentation/register_screen.dart';
-import 'package:e_commerce_full_project/features/All_categories_brands/all_categorise_screen.dart';
-import 'package:e_commerce_full_project/features/All_categories_brands/all_Item_screen.dart';
-import 'package:e_commerce_full_project/features/Categoriesscreen/presentation/screen/categorise_screen.dart';
-import 'package:e_commerce_full_project/features/CheckOut/checkout_screen.dart';
-import 'package:e_commerce_full_project/features/CheckOut/order_success/order_success_screen.dart';
+import 'package:e_commerce_full_project/features/brandscreen/brand/presentations/screens/brand_screen.dart';
+import 'package:e_commerce_full_project/features/changepassword/change_password_screen.dart';
+import 'package:e_commerce_full_project/features/changepassword/forgotpassword/forgot_password_screen.dart';
+import 'package:e_commerce_full_project/features/home/favourite/peresentation/favourite_screen.dart';
+import 'package:e_commerce_full_project/features/home/homescreen.dart';
+import 'package:e_commerce_full_project/features/home/mycart/mycart_screen.dart';
+import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
+import 'package:e_commerce_full_project/features/home/product/presentation/screen/product_details_screen.dart';
+import 'package:e_commerce_full_project/features/home/profile/presentation/screen/profile_screen.dart';
+import 'package:e_commerce_full_project/features/onboarding/onboarding_screen.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/screen/myorders_screen.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/widget/order_tracking/order_tracking.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/paymentPerferences_screen.dart';
 import 'package:e_commerce_full_project/features/settingscreen/addressScreen/address_screen.dart';
-import 'package:e_commerce_full_project/features/brandscreen/brand/presentations/screens/brand_screen.dart';
-import 'package:e_commerce_full_project/features/changepassword/change_password_screen.dart';
-import 'package:e_commerce_full_project/features/home/favourite/peresentation/favourite_screen.dart';
-import 'package:e_commerce_full_project/features/home/homescreen.dart';
-import 'package:e_commerce_full_project/features/home/mycart/mycart_screen.dart';
-import 'package:e_commerce_full_project/features/home/product/presentation/screen/product_details_screen.dart';
-import 'package:e_commerce_full_project/features/home/product/data/model/product_model.dart';
-import 'package:e_commerce_full_project/features/home/profile/presentation/screen/profile_screen.dart';
-import 'package:e_commerce_full_project/features/onboarding/onboarding_screen.dart';
 import 'package:e_commerce_full_project/features/settingscreen/personalinfo/personal_information.dart';
 import 'package:e_commerce_full_project/features/settingscreen/settingscreen.dart';
 import 'package:e_commerce_full_project/features/splashscreen/splash_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthRouterRefreshNotifier extends ChangeNotifier {
-  late final StreamSubscription _subscription;
-  AuthRouterRefreshNotifier(AuthCubit authCubit) {
-    _subscription = authCubit.stream.listen((_) {
+  late final StreamSubscription _authSubscription;
+  late final VoidCallback _onboardingListener;
+
+  final AuthCubit authCubit;
+  final ValueNotifier<bool> onboardingComplete;
+
+  AuthRouterRefreshNotifier(
+    this.authCubit,
+    this.onboardingComplete,
+  ) {
+    _authSubscription = authCubit.stream.listen((_) {
       notifyListeners();
     });
+
+    _onboardingListener = () {
+      notifyListeners();
+    };
+
+    onboardingComplete.addListener(_onboardingListener);
   }
+
   @override
   void dispose() {
-    _subscription.cancel();
+    _authSubscription.cancel();
+    onboardingComplete.removeListener(_onboardingListener);
     super.dispose();
   }
 }
-GoRouter createAppRouter(AuthCubit authCubit, bool onboardingComplete) {
-  bool splashFinished = false;
+
+GoRouter createAppRouter(
+  AuthCubit authCubit,
+  ValueNotifier<bool> onboardingComplete,
+) {
+  final refreshNotifier = AuthRouterRefreshNotifier(
+    authCubit,
+    onboardingComplete,
+  );
+
   return GoRouter(
     initialLocation: AppRoutes.splash,
-    refreshListenable: AuthRouterRefreshNotifier(authCubit),
-   redirect: (context, state) {
-  final authState = authCubit.state;
-  log('CURRENT ROUTE: ${state.matchedLocation}');
-  log('AUTH STATE: $authState');
-  final bool isLogin =
-      state.matchedLocation == AppRoutes.login;
+    refreshListenable: refreshNotifier,
+    redirect: (context, state) {
+      final authState = authCubit.state;
+      final onboardingDone = onboardingComplete.value;
 
-  final bool isRegister =
-      state.matchedLocation == AppRoutes.register;
+      final currentRoute = state.matchedLocation;
 
-  final bool isSplash =
-      state.matchedLocation == AppRoutes.splash;
+      final isLogin = currentRoute == AppRoutes.login;
+      final isRegister = currentRoute == AppRoutes.register;
+      final isSplash = currentRoute == AppRoutes.splash;
+      final isForgotPassword = currentRoute == AppRoutes.forgetPass;
+      final isChangePassword = currentRoute == AppRoutes.changepass;
+      final isOnboarding = currentRoute == AppRoutes.onboarding;
 
-  final bool isForgotPassword =
-      state.matchedLocation == AppRoutes.forgetPass;
+      log('CURRENT ROUTE: $currentRoute');
+      log('AUTH STATE: $authState');
+      log('ONBOARDING COMPLETE: $onboardingDone');
 
-  final bool isChangePassword =
-      state.matchedLocation == AppRoutes.changepass;
+      if (!onboardingDone) {
+        if (isSplash || isOnboarding) {
+          return null;
+        }
 
-  // ============================================================
-  // AUTH CHECKING
-  // ============================================================
+        return AppRoutes.onboarding;
+      }
 
-  if (authState is AuthInitial ||
-      authState is AuthChecking) {
-    return isSplash ? null : AppRoutes.splash;
-  }
+      if (authState is AuthInitial || authState is AuthChecking) {
+        return isSplash ? null : AppRoutes.splash;
+      }
 
-  // ============================================================
-  // USER NOT LOGGED IN
-  // ============================================================
+      if (authState is AuthUnauthenticated) {
+        if (isLogin ||
+            isRegister ||
+            isForgotPassword ||
+            isChangePassword) {
+          return null;
+        }
 
-  if (authState is AuthUnauthenticated) {
-    if (isLogin ||
-        isRegister ||
-        isForgotPassword) {
+        return AppRoutes.login;
+      }
+
+      if (authState is AuthSuccess) {
+        if (isSplash ||
+            isLogin ||
+            isRegister ||
+            isForgotPassword) {
+          return AppRoutes.home;
+        }
+
+        return null;
+      }
+
+      if (authState is AuthError) {
+        if (isLogin ||
+            isRegister ||
+            isForgotPassword ||
+            isChangePassword) {
+          return null;
+        }
+
+        return AppRoutes.login;
+      }
+
       return null;
-    }
-
-    return AppRoutes.login;
-  }
-
-  // ============================================================
-  // USER LOGGED IN
-  // ============================================================
-
-  if (authState is AuthSuccess) {
-  if (isRegister || isSplash) {
-    return AppRoutes.home;
-  }
-
-  if (isLogin) {
-    return null;
-  }
-
-  return null;
-} 
-
-  // ============================================================
-  // AUTH ERROR
-  // ============================================================
-
-  if (authState is AuthError) {
-    if (isLogin ||
-        isRegister ||
-        isForgotPassword ||
-        isChangePassword) {
-      return null;
-    }
-
-    return AppRoutes.login;
-  }
-
-  return null;
-},
+    },
     routes: [
       GoRoute(
         path: AppRoutes.splash,
         builder: (context, state) {
-          return SplashScreen(onboardingComplete: onboardingComplete);
+          return SplashScreen(
+            onboardingComplete: onboardingComplete.value,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.onboarding,
+        builder: (context, state) {
+          return OnboardingScreen(
+            onboardingComplete: onboardingComplete,
+          );
         },
       ),
       GoRoute(
@@ -139,8 +158,8 @@ GoRouter createAppRouter(AuthCubit authCubit, bool onboardingComplete) {
         builder: (context, state) {
           return const LoginScreen();
         },
-      ), 
-         GoRoute(
+      ),
+      GoRoute(
         path: AppRoutes.forgetPass,
         builder: (context, state) {
           return const ForgotPasswordScreen();
@@ -159,7 +178,6 @@ GoRouter createAppRouter(AuthCubit authCubit, bool onboardingComplete) {
           return const HomeScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.checkOut,
         builder: (context, state) {
@@ -170,54 +188,56 @@ GoRouter createAppRouter(AuthCubit authCubit, bool onboardingComplete) {
         path: AppRoutes.orderScreen,
         builder: (context, state) {
           final orderId = state.extra as String;
-          return OrderSuccessScreen(orderId: orderId);
+
+          return OrderSuccessScreen(
+            orderId: orderId,
+          );
         },
       ),
       GoRoute(
         path: AppRoutes.OrderTracking,
         builder: (context, state) {
           final orderId = state.extra as String;
-          return OrderTracking(orderId: orderId);
+
+          return OrderTracking(
+            orderId: orderId,
+          );
         },
       ),
-
       GoRoute(
         path: AppRoutes.allCategories,
         builder: (context, state) {
           return AllCategoriesScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.allItems,
         builder: (context, state) {
           final products = state.extra as List<ProductModel>;
 
-          return AllItemsScreen(productsList: products);
+          return AllItemsScreen(
+            productsList: products,
+          );
         },
       ),
-
       GoRoute(
         path: AppRoutes.AddressScreen,
         builder: (context, state) {
           return const AddressScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.MyOrdersScreen,
         builder: (context, state) {
           return const MyOrdersScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.PayPerf,
         builder: (context, state) {
           return const PaymentPreferenceScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.settingScreen,
         builder: (context, state) {
@@ -242,48 +262,38 @@ GoRouter createAppRouter(AuthCubit authCubit, bool onboardingComplete) {
           return BrandScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.categorise,
         builder: (context, state) {
           return const CategoriseScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.cart,
         builder: (context, state) {
           return const MycartScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) {
           return const ProfileScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.favourites,
         builder: (context, state) {
           return const FavouriteScreen();
         },
       ),
-
       GoRoute(
         path: AppRoutes.product,
         builder: (context, state) {
           final product = state.extra as ProductModel;
 
-          return ProductDetailsScreen(product: product);
-        },
-      ),
-
-      GoRoute(
-        path: AppRoutes.onboarding,
-        builder: (context, state) {
-          return const OnboardingScreen();
+          return ProductDetailsScreen(
+            product: product,
+          );
         },
       ),
     ],
