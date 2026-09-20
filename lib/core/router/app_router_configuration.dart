@@ -37,10 +37,7 @@ class AuthRouterRefreshNotifier extends ChangeNotifier {
   final AuthCubit authCubit;
   final ValueNotifier<bool> onboardingComplete;
 
-  AuthRouterRefreshNotifier(
-    this.authCubit,
-    this.onboardingComplete,
-  ) {
+  AuthRouterRefreshNotifier(this.authCubit, this.onboardingComplete) {
     _authSubscription = authCubit.stream.listen((_) {
       notifyListeners();
     });
@@ -102,10 +99,7 @@ GoRouter createAppRouter(
       }
 
       if (authState is AuthUnauthenticated) {
-        if (isLogin ||
-            isRegister ||
-            isForgotPassword ||
-            isChangePassword) {
+        if (isLogin || isRegister || isForgotPassword || isChangePassword) {
           return null;
         }
 
@@ -113,10 +107,7 @@ GoRouter createAppRouter(
       }
 
       if (authState is AuthSuccess) {
-        if (isSplash ||
-            isLogin ||
-            isRegister ||
-            isForgotPassword) {
+        if (isSplash || isLogin || isRegister || isForgotPassword) {
           return AppRoutes.home;
         }
 
@@ -124,10 +115,7 @@ GoRouter createAppRouter(
       }
 
       if (authState is AuthError) {
-        if (isLogin ||
-            isRegister ||
-            isForgotPassword ||
-            isChangePassword) {
+        if (isLogin || isRegister || isForgotPassword || isChangePassword) {
           return null;
         }
 
@@ -140,17 +128,13 @@ GoRouter createAppRouter(
       GoRoute(
         path: AppRoutes.splash,
         builder: (context, state) {
-          return SplashScreen(
-            onboardingComplete: onboardingComplete.value,
-          );
+          return SplashScreen(onboardingComplete: onboardingComplete.value);
         },
       ),
       GoRoute(
         path: AppRoutes.onboarding,
         builder: (context, state) {
-          return OnboardingScreen(
-            onboardingComplete: onboardingComplete,
-          );
+          return OnboardingScreen(onboardingComplete: onboardingComplete);
         },
       ),
       GoRoute(
@@ -189,9 +173,7 @@ GoRouter createAppRouter(
         builder: (context, state) {
           final orderId = state.extra as String;
 
-          return OrderSuccessScreen(
-            orderId: orderId,
-          );
+          return OrderSuccessScreen(orderId: orderId);
         },
       ),
       GoRoute(
@@ -199,9 +181,7 @@ GoRouter createAppRouter(
         builder: (context, state) {
           final orderId = state.extra as String;
 
-          return OrderTracking(
-            orderId: orderId,
-          );
+          return OrderTracking(orderId: orderId);
         },
       ),
       GoRoute(
@@ -215,9 +195,7 @@ GoRouter createAppRouter(
         builder: (context, state) {
           final products = state.extra as List<ProductModel>;
 
-          return AllItemsScreen(
-            productsList: products,
-          );
+          return AllItemsScreen(productsList: products);
         },
       ),
       GoRoute(
@@ -291,9 +269,7 @@ GoRouter createAppRouter(
         builder: (context, state) {
           final product = state.extra as ProductModel;
 
-          return ProductDetailsScreen(
-            product: product,
-          );
+          return ProductDetailsScreen(product: product);
         },
       ),
     ],

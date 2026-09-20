@@ -1,4 +1,3 @@
-import 'package:e_commerce_full_project/features/Categoriesscreen/data/categories_data.dart';
 import 'package:e_commerce_full_project/features/Categoriesscreen/data/models/category_model.dart';
 import 'package:e_commerce_full_project/features/Categoriesscreen/presentation/screen/categorise_screen.dart';
 import 'package:e_commerce_full_project/features/brandscreen/brand/data/models/brand_model.dart';
@@ -8,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ListItemWidget extends StatelessWidget {
-  BrandModel? brand;
+  final BrandModel? brand;
   final bool isCategories;
-  CategoryModel? catData;
-  ListItemWidget({
+  final CategoryModel? catData;
+
+  const ListItemWidget({
     super.key,
     this.catData,
     this.brand,
@@ -20,7 +20,8 @@ class ListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorscheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
@@ -28,20 +29,22 @@ class ListItemWidget extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              if (isCategories == true) {
+              if (isCategories) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        CategoriseScreen(selectedCategoryName: catData!.name),
+                    builder: (context) => CategoriseScreen(
+                      selectedCategoryId: catData!.id,
+                    ),
                   ),
                 );
               } else {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        BrandScreen(selectedBrandId: brand!.name),
+                    builder: (context) => BrandScreen(
+                      selectedBrandId: brand!.name,
+                    ),
                   ),
                 );
               }
@@ -60,7 +63,10 @@ class ListItemWidget extends StatelessWidget {
                   width: 70.w,
                   height: 70.w,
                   errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.broken_image, color: Colors.grey);
+                    return const Icon(
+                      Icons.broken_image,
+                      color: Colors.grey,
+                    );
                   },
                 ),
               ),
@@ -72,7 +78,7 @@ class ListItemWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,
-              color: colorscheme.primary,
+              color: colorScheme.primary,
             ),
           ),
         ],

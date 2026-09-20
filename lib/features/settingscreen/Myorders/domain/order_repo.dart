@@ -11,6 +11,7 @@ abstract class OrderRepo {
  Future<void> removeOrder (String orderId); 
 
  Future <void> clearOrders(); 
+  Stream<List<OrderModel>> watchOrders();
 
 
 }

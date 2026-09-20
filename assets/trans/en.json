@@ -243,5 +243,6 @@
   "payment_pref_saved" : "Payment choice saved successfully", 
   "registered_successfly" : "U have Registered successfly",
   "add_profile_photo_optional" : "add profile photo (optional)", 
-  "enter_your_phone_number": "Enter your phone number"
+  "enter_your_phone_number": "Enter your phone number", 
+  "back_in_transit" : "Back in transit"
 }

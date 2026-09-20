@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:e_commerce_full_project/features/home/mycart/data/model/cart_item_model.dart';
@@ -7,19 +8,42 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderCubit extends Cubit<List<OrderModel>> {
   final OrderRepo _orderRepository;
-
+  StreamSubscription<List<OrderModel>>?
+      _ordersSubscription; 
   OrderCubit(this._orderRepository) : super([]);
 
   Future<void> getOrders() async {
     try {
       final orders = await _orderRepository.getOrders();
 
-      emit(orders);
+      emit(orders); 
+     
+     _startWatchingOrders();
+
 
       log('Orders loaded successfully: ${orders.length}');
     } catch (e) {
       log('Failed to load orders: $e');
     }
+  }
+  void _startWatchingOrders() {
+    _ordersSubscription?.cancel();
+
+    _ordersSubscription =
+        _orderRepository.watchOrders().listen(
+      (orders) {
+        emit(orders);
+
+        log(
+          'Orders updated in real time: ${orders.length}',
+        );
+      },
+      onError: (error) {
+        log(
+          'Orders stream error: $error',
+        );
+      },
+    );
   }
 
   Future<void> addOrder({
@@ -92,5 +116,12 @@ class OrderCubit extends Cubit<List<OrderModel>> {
     } catch (e) {
       log('Failed to clear orders: $e');
     }
+  }  
+
+  @override
+  Future<void> close() {
+    _ordersSubscription?.cancel();
+    return super.close();
   }
+
 }

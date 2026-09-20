@@ -17,35 +17,42 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoriseScreen extends StatefulWidget {
-  final String? selectedCategoryName;
+  final String? selectedCategoryId;
 
-  const CategoriseScreen({super.key, this.selectedCategoryName});
+  const CategoriseScreen({
+    super.key,
+    this.selectedCategoryId,
+  });
 
   @override
   State<CategoriseScreen> createState() => _CategoriseScreenState();
 }
 
 class _CategoriseScreenState extends State<CategoriseScreen> {
-  String? selectedCategory;
+  String? selectedCategoryId;
 
   @override
   void initState() {
     super.initState();
-    selectedCategory = widget.selectedCategoryName;
-    context.read<CategoryCubit>().getAllCategories();
-    context.read<ProductCubit>().getAllProducts(); 
-      context.read<BrandCubit>().getAllBrands();
 
+    selectedCategoryId = widget.selectedCategoryId;
+
+    context.read<CategoryCubit>().getAllCategories();
+    context.read<ProductCubit>().getAllProducts();
+    context.read<BrandCubit>().getAllBrands();
   }
 
-  List<ProductModel> getFilteredProducts(List<ProductModel> products) {
-    if (selectedCategory == null) {
-      return products;
+  List<ProductModel> getFilteredProducts(
+    List<ProductModel> products,
+  ) {
+    if (selectedCategoryId == null ||
+        selectedCategoryId!.trim().isEmpty) {
+      return [];
     }
 
     return products.where((product) {
-      return product.category.trim().toLowerCase() ==
-          selectedCategory!.trim().toLowerCase();
+      return product.categoryId.trim() ==
+          selectedCategoryId!.trim();
     }).toList();
   }
 
@@ -59,7 +66,10 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
           'shop_by_category'.tr(),
           style: AppTextStyles.headline(
             context,
-          ).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w700),
+          ).copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         centerTitle: true,
         backgroundColor: colorScheme.onPrimary,
@@ -68,30 +78,44 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
       body: BlocBuilder<CategoryCubit, CategoryState>(
         builder: (context, categoryState) {
           if (categoryState is CategoryLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (categoryState is CategoryError) {
             return Center(
-              child: Text(categoryState.message, textAlign: TextAlign.center),
+              child: Text(
+                categoryState.message,
+                textAlign: TextAlign.center,
+              ),
             );
           }
 
           if (categoryState is CategorySuccess) {
-            final List<CategoryModel> categories = categoryState.categories;
+            final List<CategoryModel> categories =
+                categoryState.categories;
 
             if (categories.isEmpty) {
-              return NoItemsWidget(mainText: 'no_items'.tr());
+              return NoItemsWidget(
+                mainText: 'no_items'.tr(),
+              );
             }
 
-            if (selectedCategory == null) {
-              selectedCategory = categories.first.name;
+            if (selectedCategoryId == null ||
+                !categories.any(
+                  (category) =>
+                      category.id == selectedCategoryId,
+                )) {
+              selectedCategoryId = categories.first.id;
             }
 
             return BlocBuilder<ProductCubit, ProductState>(
               builder: (context, productState) {
                 if (productState is ProductLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
 
                 if (productState is ProductError) {
@@ -104,9 +128,11 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
                 }
 
                 if (productState is ProductSuccess) {
-                  final List<ProductModel> products = productState.products;
+                  final List<ProductModel> products =
+                      productState.products;
 
-                  final filteredProducts = getFilteredProducts(products);
+                  final filteredProducts =
+                      getFilteredProducts(products);
 
                   return Column(
                     children: [
@@ -116,11 +142,16 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
                         height: 110.h,
                         child: CustomListView(
                           items: categories,
-                          itemBuilder: (context, item, index) {
+                          itemBuilder: (
+                            context,
+                            item,
+                            index,
+                          ) {
                             final category = item;
 
                             final isSelected =
-                                selectedCategory == category.name;
+                                selectedCategoryId ==
+                                    category.id;
 
                             return BrandCategoriesWidget(
                               isSelected: isSelected,
@@ -128,13 +159,15 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
                               isCategories: true,
                               onTap: () {
                                 setState(() {
-                                  selectedCategory = category.name;
+                                  selectedCategoryId =
+                                      category.id;
                                 });
                               },
                             );
                           },
                           Scroll: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
+                          physics:
+                              const BouncingScrollPhysics(),
                         ),
                       ),
 
@@ -147,34 +180,50 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
                       Expanded(
                         child: filteredProducts.isEmpty
                             ? NoItemsWidget(
-                                mainText: 'no_products_in_category'.tr(),
+                                mainText:
+                                    'no_products_in_category'
+                                        .tr(),
                               )
-                            : 
-BlocBuilder<BrandCubit, BrandState>(
-  builder: (context, brandState) {
-    if (brandState is BrandLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+                            : BlocBuilder<
+                                BrandCubit,
+                                BrandState
+                              >(
+                                builder: (
+                                  context,
+                                  brandState,
+                                ) {
+                                  if (brandState
+                                      is BrandLoading) {
+                                    return const Center(
+                                      child:
+                                          CircularProgressIndicator(),
+                                    );
+                                  }
 
-    if (brandState is BrandError) {
-      return Center(
-        child: Text(brandState.message),
-      );
-    }
+                                  if (brandState
+                                      is BrandError) {
+                                    return Center(
+                                      child: Text(
+                                        brandState.message,
+                                        textAlign:
+                                            TextAlign.center,
+                                      ),
+                                    );
+                                  }
 
-    if (brandState is BrandSuccess) {
-      return ItemsGridViewWidget(
-        productList: filteredProducts,
-        brands: brandState.brands,
-      );
-    }
+                                  if (brandState
+                                      is BrandSuccess) {
+                                    return ItemsGridViewWidget(
+                                      productList:
+                                          filteredProducts,
+                                      brands:
+                                          brandState.brands,
+                                    );
+                                  }
 
-    return const SizedBox.shrink();
-  },
-),
-
+                                  return const SizedBox.shrink();
+                                },
+                              ),
                       ),
                     ],
                   );

@@ -17,23 +17,29 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
   @override
   void initState() {
     super.initState();
-
     context.read<CategoryCubit>().getAllCategories();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('categories'.tr())),
+      appBar: AppBar(
+        title: Text('categories'.tr()),
+      ),
       body: BlocBuilder<CategoryCubit, CategoryState>(
         builder: (context, state) {
           if (state is CategoryLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if (state is CategoryError) {
             return Center(
-              child: Text(state.message, textAlign: TextAlign.center),
+              child: Text(
+                state.message,
+                textAlign: TextAlign.center,
+              ),
             );
           }
 
@@ -41,7 +47,9 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
             final categories = state.categories;
 
             if (categories.isEmpty) {
-              return NoItemsWidget(mainText: 'No categories found');
+              return NoItemsWidget(
+                mainText: 'No categories found',
+              );
             }
 
             return ListView.separated(
@@ -54,18 +62,24 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
                 final category = categories[index];
 
                 return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                  ),
                   leading: CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(category.image),
+                    backgroundImage: NetworkImage(
+                      category.image,
+                    ),
                   ),
-                  title: Text(category.name.tr()),
+                  title: Text(
+                    category.name.tr(),
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => CategoriseScreen(
-                          selectedCategoryName: category.name,
+                          selectedCategoryId: category.id,
                         ),
                       ),
                     );

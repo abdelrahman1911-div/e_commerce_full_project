@@ -47,7 +47,23 @@ class OrderRepoImpl implements OrderRepo {
   Future<void> removeOrder (String orderId ) async {
     await _ordersCollection.doc(orderId).delete(); 
   } 
-
+    @override
+  Stream<List<OrderModel>> watchOrders() {
+    return _ordersCollection
+        .orderBy(
+          'date',
+          descending: true,
+        )
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return OrderModel.fromJson({
+          ...doc.data(),
+          'id': doc.id,
+        });
+      }).toList();
+    });
+  }
   @override 
   Future <void> clearOrders () async {
     final snapshot = await _ordersCollection.get(); 
