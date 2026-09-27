@@ -64,7 +64,6 @@ class _TrackingWidgetState extends State<TrackingWidget> {
 
     formattedAddress = formattedAddress.replaceFirst(plusCodeRegex, '');
 
-
     formattedAddress = formattedAddress.replaceAll(
       RegExp(r'(,\s*Egypt)+', caseSensitive: false),
       ', Egypt',
@@ -74,7 +73,6 @@ class _TrackingWidgetState extends State<TrackingWidget> {
     formattedAddress = formattedAddress.replaceFirst(RegExp(r',\s*$'), '');
     return formattedAddress.trim();
   }
-
 
   Future<void> getOrder() async {
     try {
@@ -222,7 +220,6 @@ class _TrackingWidgetState extends State<TrackingWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 4.h),
-
           // =====================================================
           // HEADER
           // =====================================================
@@ -233,9 +230,7 @@ class _TrackingWidgetState extends State<TrackingWidget> {
                 widget.headerText ?? 'order_tracking.deliver_to'.tr(),
                 style: theme.textTheme.titleMedium,
               ),
-
               SizedBox(width: 20.w),
-
               Expanded(
                 child: Text(
                   formattedAddress,
@@ -246,34 +241,35 @@ class _TrackingWidgetState extends State<TrackingWidget> {
               ),
             ],
           ),
-
           SizedBox(height: 10.h),
-
-          // =====================================================
-          // STEP 1
-          // =====================================================
+          // first step 
           TrackingStep(
-            title:
-                widget.trackingStep1 ?? 'order_tracking.package_shipped'.tr(),
-            isActive: activeStep >= 1,
+            title: widget.trackingStep1 ?? 'order_tracking.package_placed'.tr(),
+            isActive: true,
             isLast: false,
           ),
-
-          // =====================================================
-          // STEP 2
-          // =====================================================
+          // second step 
           TrackingStep(
-            title: widget.trackingStep2 ?? 'order_tracking.in_transit'.tr(),
-            isActive: activeStep >= 2,
+            title: widget.trackingStep2 ?? 'order_tracking_confirmed'.tr(),
+            isActive: true,
             isLast: false,
           ),
-
-          // =====================================================
-          // STEP 3
-          // =====================================================
+         // third step 
           TrackingStep(
-            title: widget.trackingStep3 ?? 'order_tracking.arriving_today'.tr(),
+            title: widget.trackingStep3 ?? 'order_tracking_Preparing'.tr(),
             isActive: activeStep >= 3,
+            isLast: false,
+          ), 
+          // fourth step 
+          TrackingStep(
+            title: widget.trackingStep3 ?? 'order_tracking.on_the_way'.tr(),
+            isActive: activeStep >= 4,
+            isLast: false,
+          ), 
+          // fifth step
+          TrackingStep(
+            title: widget.trackingStep3 ?? 'order_tracking.delivered'.tr(),
+            isActive: activeStep >= 5,
             isLast: true,
           ),
         ],

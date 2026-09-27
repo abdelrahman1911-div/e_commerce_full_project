@@ -31,37 +31,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   final prefs = await SharedPreferences.getInstance();
-
   final onboardingComplete = ValueNotifier<bool>(
-    prefs.getBool('onboardingComplete') ?? false,
+    // prefs.getBool('onboardingComplete') ?? 
+     false,
   );
-
   await EasyLocalization.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   await GoogleSignIn.instance.initialize(
     serverClientId:
         '507116110863-2idafv7fauibaa3lif84a0a9tcsc14p5.apps.googleusercontent.com',
   );
-
   final authCubit = AuthCubit(
     InjectionContainer.authRepository,
   );
-
   log('FINAL AUTH STATE: ${authCubit.state}');
   log('CURRENT USER: ${FirebaseAuth.instance.currentUser?.uid}');
   log('ONBOARDING COMPLETE: ${onboardingComplete.value}');
-
   final appRouter = createAppRouter(
     authCubit,
     onboardingComplete,
   );
-
   runApp(
     EasyLocalization(
       supportedLocales: const [
@@ -133,7 +125,6 @@ Future<void> main() async {
     ),
   );
 }
-
 class MyApp extends StatelessWidget {
   final GoRouter appRouter;
 

@@ -244,5 +244,10 @@
   "registered_successfly" : "U have Registered successfly",
   "add_profile_photo_optional" : "add profile photo (optional)", 
   "enter_your_phone_number": "Enter your phone number", 
-  "back_in_transit" : "Back in transit"
+  "back_in_transit" : "Back in transit", 
+  "order_tracking.delivered" : "Deliverd", 
+  "order_tracking.on_the_way" : "Package on the way", 
+  "order_tracking_Preparing" : "Preparing your order", 
+  "order_tracking_confirmed" : "Order Confirmed", 
+  "order_tracking.package_placed" : "Your Order is placed successfully"  
 }

@@ -8,10 +8,7 @@ class SearchInitial extends SearchState {}
 class SearchLoaded extends SearchState {
   final List<ProductModel> products;
   final bool isSearching;
-  const SearchLoaded({
-    required this.products,
-    required this.isSearching,
-  });
+  const SearchLoaded({required this.products, required this.isSearching});
 }
 class SearchCubit extends Cubit<SearchState> {
   SearchCubit() : super(SearchInitial());
@@ -23,64 +20,29 @@ class SearchCubit extends Cubit<SearchState> {
   }) {
     _allProducts = products;
     _allBrands = brands;
-    emit(
-      SearchLoaded(
-        products: products,
-        isSearching: false,
-      ),
-    );
+    emit(SearchLoaded(products: products, isSearching: false));
   }
   void search(String query) {
     final searchQuery = query.trim().toLowerCase();
     if (searchQuery.isEmpty) {
-      emit(
-        SearchLoaded(
-          products: _allProducts,
-          isSearching: false,
-        ),
-      );
+      emit(SearchLoaded(products: _allProducts, isSearching: false));
       return;
     }
     final matchingBrandIds = _allBrands
-        .where(
-          (brand) =>
-              brand.name.toLowerCase().contains(searchQuery),
-        )
+        .where((brand) => brand.name.toLowerCase().contains(searchQuery))
         .map((brand) => brand.id)
         .toSet();
     final filteredProducts = _allProducts.where((product) {
-      final productName =
-          product.name.toLowerCase();
-
-      final description =
-          product.description.toLowerCase();
-
-      final matchesProductName =
-          productName.contains(searchQuery);
-
-      final matchesDescription =
-          description.contains(searchQuery);
-
-      final matchesBrand =
-          matchingBrandIds.contains(product.brandId);
-
-      return matchesProductName ||
-          matchesDescription ||
-          matchesBrand;
+      final productName = product.name.toLowerCase();
+      final description = product.description.toLowerCase();
+      final matchesProductName = productName.contains(searchQuery);
+      final matchesDescription = description.contains(searchQuery);
+      final matchesBrand = matchingBrandIds.contains(product.brandId);
+      return matchesProductName || matchesDescription || matchesBrand;
     }).toList();
-    emit(
-      SearchLoaded(
-        products: filteredProducts,
-        isSearching: true,
-      ),
-    );
+    emit(SearchLoaded(products: filteredProducts, isSearching: true));
   }
   void clearSearch() {
-    emit(
-      SearchLoaded(
-        products: _allProducts,
-        isSearching: false,
-      ),
-    );
+    emit(SearchLoaded(products: _allProducts, isSearching: false));
   }
 }

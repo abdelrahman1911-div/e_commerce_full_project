@@ -210,7 +210,6 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
                                       ),
                                     );
                                   }
-
                                   if (brandState
                                       is BrandSuccess) {
                                     return ItemsGridViewWidget(
@@ -220,7 +219,6 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
                                           brandState.brands,
                                     );
                                   }
-
                                   return const SizedBox.shrink();
                                 },
                               ),
@@ -228,12 +226,10 @@ class _CategoriseScreenState extends State<CategoriseScreen> {
                     ],
                   );
                 }
-
                 return const SizedBox.shrink();
               },
             );
           }
-
           return const SizedBox.shrink();
         },
       ),

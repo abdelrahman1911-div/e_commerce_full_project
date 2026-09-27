@@ -17,9 +17,9 @@ import 'package:e_commerce_full_project/features/settingscreen/Myorders/domain/o
 import 'package:firebase_auth/firebase_auth.dart';
 
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance; 
-final BrandRepository brandRepository = BrandRepositoryImpl(FirebaseFirestore.instance,); 
-final CategoryRepo categoryRepository = CategoryRepositoryImpl(firebaseFirestore);
 final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance; 
+final BrandRepository brandRepository = BrandRepositoryImpl(firebaseFirestore,); 
+final CategoryRepo categoryRepository = CategoryRepositoryImpl(firebaseFirestore);
 final CloudinaryService cloudinaryService = CloudinaryService();  
 final AuthRepository authRepository = AuthRepositoryImpl(
   firebaseAuth, firebaseFirestore , cloudinaryService

@@ -242,6 +242,10 @@
   "payment_pref_saved" : "تم اختيار وسيله الدفع بنجاح", 
   "registered_successfly" : "قمت بعمل حساب جديد", 
   "add_profile_photo_optional": "إضافة صورة شخصية (اختياري)", 
-  "enter_your_phone_number": "أدخل رقم هاتفك"
-
+  "enter_your_phone_number": "أدخل رقم هاتفك", 
+  "order_tracking.delivered" : "تم التوصيل", 
+"order_tracking.on_the_way" : "الطلب في الطريق", 
+"order_tracking_Preparing" : "جاري تجهيز طلبك", 
+"order_tracking_confirmed" : "تم تأكيد الطلب", 
+"order_tracking.package_placed" : "تم تقديم طلبك بنجاح"
 }

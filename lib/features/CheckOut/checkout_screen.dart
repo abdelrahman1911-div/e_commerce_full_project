@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce_full_project/core/widgets/couustom_text_field_widget.dart';
 import 'package:e_commerce_full_project/features/home/homescreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_commerce_full_project/core/router/app_routes.dart';
@@ -21,6 +22,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:go_router/go_router.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -42,16 +44,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   final TextEditingController nameController = TextEditingController();
 
-  bool isLoadingUserData = true;
+  final TextEditingController deliveryNotesController = TextEditingController();
 
+  bool isLoadingUserData = true;
   bool isadressEditing = false;
   bool isPhoneEditing = false;
   bool isNameEditing = false;
-
+  
   final orderId = DateTime.now().millisecondsSinceEpoch.toString();
-
+  final Geocoding geocoding = Geocoding();   
   String deliveryway = "";
-
+  Future<Location> getLocationFromAddress (String address) async {
+    final location = await geocoding.locationFromAddress(address); 
+     if(location.isEmpty) {throw Exception("Location not found");} 
+     return location.first; 
+  }
   Future<void> _loadUserData() async {
     try {
       final user = _auth.currentUser;
@@ -89,7 +96,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
         isLoadingUserData = false;
       });
-
       log('User checkout data loaded successfully.');
       log('Name: $name');
       log('Phone: $phone');
@@ -100,18 +106,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         error: e,
         stackTrace: stackTrace,
       );
-
       if (!mounted) return;
-
       setState(() {
         isLoadingUserData = false;
       });
     }
   }
-
   Future<void> _changePaymentPreference() async {
     final cubit = context.read<PaymentPreferenceCubit>();
-
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -121,23 +123,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
       ),
     );
-
     if (!mounted) return;
   }
 
   @override
   void initState() {
     super.initState();
-
     _loadUserData();
   }
-
   @override
   void dispose() {
     addressController.dispose();
     phoneController.dispose();
     nameController.dispose();
-
+    deliveryNotesController.dispose(); 
     super.dispose();
   }
 
@@ -226,7 +225,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           controller: nameController,
                           isPhone: false,
                           isName: true,
-                        ),
+                        ), 
+                        CustomTextFieldWidget(controller: deliveryNotesController, hintText: "Enter delivery notes (optional)"), 
                         SizedBox(height: 20.h),
                         ChoosePayment(
                           onChangePayment: _changePaymentPreference,
@@ -252,38 +252,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         >(
                           builder: (context, paymentState) {
                             String selectedPayment = 'cash';
-
                             if (paymentState is PaymentPreferenceSuccess) {
                               selectedPayment = paymentState.selectedPayment;
                             }
-
                             return FeesWidget(
                               buttonText: 'check_out'.tr(),
-
                               isCheckOut: true,
-
                               firstWord: 'total'.tr(),
-
                               firstValue: '\$${total.toStringAsFixed(2)}',
-
                               secondWord: 'delivery_fees'.tr(),
-
                               secondValue: '\$${delivery.toStringAsFixed(2)}',
-
                               thirdWord: 'delivered_by'.tr(),
-
                               thirdValue: deliveryway.isEmpty
                                   ? 'not_selected'.tr()
                                   : deliveryway == "fedex"
                                   ? 'fedex'.tr()
                                   : 'dhl'.tr(),
-
                               fourWord: 'subtotal'.tr(),
-
                               fourValue: '\$${subtotal.toStringAsFixed(2)}',
-
                               fiveWord: 'payment_method'.tr(),
-
                               fiveValue: selectedPayment == "card"
                                   ? 'card'.tr()
                                   : 'cash'.tr(),
@@ -307,7 +294,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ),
                                     ),
                                   );
-
                                   return;
                                 }
                                 if (cartItems.isEmpty) {
@@ -319,7 +305,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                                   return;
                                 }
-
                                 if (addressController.text.trim().isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -328,17 +313,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ),
                                     ),
                                   );
-
                                   return;
                                 }
-
                                 if (nameController.text.trim().isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Please enter your name.'),
                                     ),
                                   );
-
                                   return;
                                 }
                                 if (phoneController.text.trim().isEmpty) {
@@ -349,12 +331,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ),
                                     ),
                                   );
-
                                   return;
                                 }
-
                                 try {
-                                  await context.read<OrderCubit>().addOrder(
+                                  final location = await getLocationFromAddress(addressController.text.trim()); 
+                                  await context.read<OrderCubit>().addOrder( 
+                                    recipientName: nameController.text.trim(), 
+                                    recipientPhone: phoneController.text.trim(), 
+                                    paymentStatus: "Not paid", 
+                                    deliveryLatitude: location.latitude, 
+                                    deliveryLongitude: location.longitude, 
+                                    deliveryNotes: deliveryNotesController.text.trim(), 
                                     products: cartItems,
                                     id: orderId,
                                     totalPrice: subtotal,

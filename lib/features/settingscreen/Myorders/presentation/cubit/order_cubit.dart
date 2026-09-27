@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:e_commerce_full_project/core/di/injection_container.dart';
 import 'package:e_commerce_full_project/features/home/mycart/data/model/cart_item_model.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/models/orderModel.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/domain/order_repo.dart';
@@ -52,24 +53,48 @@ class OrderCubit extends Cubit<List<OrderModel>> {
     required double totalPrice,
     required String address,
     required String paymentMethod,
+    required String paymentStatus,
+    required String recipientName,
+    required String recipientPhone,
+    double? deliveryLatitude,
+    double? deliveryLongitude,
+    String? deliveryNotes,
   }) async {
     try {
+      final user = firebaseAuth.currentUser;
+
+      if (user == null) {
+        throw Exception('User is not logged in');
+      }
+
+      if (recipientName.trim().isEmpty || recipientPhone.trim().isEmpty) {
+        throw Exception('Recipient name and phone are required');
+      }
+
+      if ((deliveryLatitude == null) != (deliveryLongitude == null)) {
+        throw Exception('Delivery location is incomplete');
+      }
+
       final order = OrderModel(
         id: id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: user.uid,
         products: products,
         totalPrice: totalPrice,
         address: address,
-        status: 'pending',
-        paymentMethod: paymentMethod,
+        status: 'placed',
         date: DateTime.now(),
+        paymentMethod: paymentMethod,
+        paymentStatus: paymentStatus.toLowerCase(),
+        recipientName: recipientName.trim(),
+        recipientPhone: recipientPhone.trim(),
+        deliveryLatitude: deliveryLatitude,
+        deliveryLongitude: deliveryLongitude,
+        deliveryNotes: deliveryNotes?.trim(),
       );
 
       await _orderRepository.addOrder(order);
 
-      emit([
-        ...state,
-        order,
-      ]);
+      emit([...state, order]);
 
       log('Order added successfully: ${order.id}');
     } catch (e) {
@@ -77,6 +102,7 @@ class OrderCubit extends Cubit<List<OrderModel>> {
       rethrow;
     }
   }
+
 
   Future<void> removeOrder(String orderId) async {
     try {

@@ -16,12 +16,25 @@ class SplashScreen extends StatefulWidget {
 }
 class _SplashScreenState extends State<SplashScreen> {
   Timer? _timer;
+  Timer? _animationTimer;
+  bool _showAnimation = false;
   bool _navigated = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AuthCubit>().checkAuth();
+
+      _animationTimer = Timer(
+        const Duration(milliseconds: 300),
+        () {
+          if (!mounted) return;
+
+          setState(() {
+            _showAnimation = true;
+          });
+        },
+      );
       if (!widget.onboardingComplete) {
         _timer = Timer(
           const Duration(seconds: 2),
@@ -38,14 +51,17 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _animationTimer?.cancel();
     super.dispose();
   }
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: BallBounceSplash(),
+        child: _showAnimation
+            ? const BallBounceSplash()
+            : const SizedBox.shrink(),
       ),
     );
   }
