@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:e_commerce_full_project/core/di/injection_container.dart';
 import 'package:e_commerce_full_project/features/home/mycart/data/model/cart_item_model.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/models/orderModel.dart';
@@ -12,7 +11,7 @@ class OrderCubit extends Cubit<List<OrderModel>> {
   StreamSubscription<List<OrderModel>>?
       _ordersSubscription; 
   OrderCubit(this._orderRepository) : super([]);
-
+   
   Future<void> getOrders() async {
     try {
       final orders = await _orderRepository.getOrders();
@@ -26,7 +25,8 @@ class OrderCubit extends Cubit<List<OrderModel>> {
     } catch (e) {
       log('Failed to load orders: $e');
     }
-  }
+  } 
+
   void _startWatchingOrders() {
     _ordersSubscription?.cancel();
 

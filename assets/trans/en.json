@@ -249,5 +249,6 @@
   "order_tracking.on_the_way" : "Package on the way", 
   "order_tracking_Preparing" : "Preparing your order", 
   "order_tracking_confirmed" : "Order Confirmed", 
-  "order_tracking.package_placed" : "Your Order is placed successfully"  
+  "order_tracking.package_placed" : "Your Order is placed successfully", 
+  "order_tracking.picked_up" : "picked up" 
 }

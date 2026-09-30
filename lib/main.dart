@@ -16,6 +16,7 @@ import 'package:e_commerce_full_project/features/home/product/presentation/cubit
 import 'package:e_commerce_full_project/features/home/profile/data/repos/user_repo_impl.dart';
 import 'package:e_commerce_full_project/features/home/profile/presentation/cubit/user_cubit.dart';
 import 'package:e_commerce_full_project/features/search/presentation/cubit/search_cubit.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/driver_location_cubit.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/order_cubit.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/cubit/payment_preference_services.dart';
 import 'package:e_commerce_full_project/firebase_options.dart';
@@ -33,7 +34,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final onboardingComplete = ValueNotifier<bool>(
-    // prefs.getBool('onboardingComplete') ?? 
+    prefs.getBool('onboardingComplete') ?? 
      false,
   );
   await EasyLocalization.ensureInitialized();
@@ -95,6 +96,9 @@ Future<void> main() async {
             create: (_) => CategoryCubit(
               InjectionContainer.categoryRepository,
             ),
+          ), 
+          BlocProvider<DriverLocationCubit>(
+            create: (context) => DriverLocationCubit(InjectionContainer.orderRepo),
           ),
           BlocProvider<BrandCubit>(
             create: (_) => BrandCubit(

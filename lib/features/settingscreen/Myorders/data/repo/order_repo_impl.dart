@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/models/driver_location_model.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/models/orderModel.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/domain/order_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,8 +47,33 @@ class OrderRepoImpl implements OrderRepo {
   @override 
   Future<void> removeOrder (String orderId ) async {
     await _ordersCollection.doc(orderId).delete(); 
-  } 
-    @override
+  }  
+@override
+Stream<DriverLocationModel?> watchDriverLocation(String driverId) { 
+   return _fireStore
+      .collection('drivers')
+      .doc(driverId)
+      .snapshots()
+      .map((snapshot) {
+    final data = snapshot.data();
+
+    if (data == null) {
+      return null;
+    }
+
+    final latitude = data['latitude'];
+    final longitude = data['longitude'];
+
+    if (latitude == null || longitude == null) {
+      return null;
+    }
+
+    return DriverLocationModel.fromJson({
+      'latitude': latitude,
+      'longitude': longitude,
+    });
+  });
+}  @override
   Stream<List<OrderModel>> watchOrders() {
     return _ordersCollection
         .orderBy(
