@@ -14,8 +14,13 @@ class OrderModel {
 
   final String recipientName;
   final String recipientPhone;
+
   final double? deliveryLatitude;
   final double? deliveryLongitude;
+
+  final double? destinationLatitude;
+  final double? destinationLongitude;
+
   final String? deliveryNotes;
 
   final String? driverId;
@@ -41,6 +46,8 @@ class OrderModel {
     required this.recipientPhone,
     this.deliveryLatitude,
     this.deliveryLongitude,
+    this.destinationLatitude,
+    this.destinationLongitude,
     this.deliveryNotes,
     this.driverId,
     this.driverName,
@@ -64,6 +71,8 @@ class OrderModel {
     String? recipientPhone,
     double? deliveryLatitude,
     double? deliveryLongitude,
+    double? destinationLatitude,
+    double? destinationLongitude,
     String? deliveryNotes,
     String? driverId,
     String? driverName,
@@ -86,6 +95,10 @@ class OrderModel {
       recipientPhone: recipientPhone ?? this.recipientPhone,
       deliveryLatitude: deliveryLatitude ?? this.deliveryLatitude,
       deliveryLongitude: deliveryLongitude ?? this.deliveryLongitude,
+      destinationLatitude:
+          destinationLatitude ?? this.destinationLatitude,
+      destinationLongitude:
+          destinationLongitude ?? this.destinationLongitude,
       deliveryNotes: deliveryNotes ?? this.deliveryNotes,
       driverId: driverId ?? this.driverId,
       driverName: driverName ?? this.driverName,
@@ -99,43 +112,45 @@ class OrderModel {
 
   Map<String, dynamic> toJson() {
     return {
-    'id': id,
-    'userId': userId,
-    'totalPrice': totalPrice,
-    'address': address,
-    'status': status,
-    'date': Timestamp.fromDate(date),
-    'paymentMethod': paymentMethod,
-    'paymentStatus': paymentStatus,
-    'recipientName': recipientName,
-    'recipientPhone': recipientPhone,
-    'deliveryLatitude': deliveryLatitude,
-    'deliveryLongitude': deliveryLongitude,
-    'deliveryNotes': deliveryNotes,
-    'driverId': driverId,
-    'driverName': driverName,
-    'assignedAt': assignedAt == null
-        ? null
-        : Timestamp.fromDate(assignedAt!),
-    'pickedUpAt': pickedUpAt == null
-        ? null
-        : Timestamp.fromDate(pickedUpAt!),
-    'onTheWayAt': onTheWayAt == null
-        ? null
-        : Timestamp.fromDate(onTheWayAt!),
-    'deliveredAt': deliveredAt == null
-        ? null
-        : Timestamp.fromDate(deliveredAt!),
-    'products': products.map((cartItem) {
-      return {
-        'cartItemId': cartItem.cartItemId,
-        'quantity': cartItem.quantity,
-        'selectedColor': cartItem.selectedColor,
-        'selectedSize': cartItem.selectedSize,
-        'product': cartItem.product.toJson(),
-      };
-    }).toList(),
-  };
+      'id': id,
+      'userId': userId,
+      'totalPrice': totalPrice,
+      'address': address,
+      'status': status,
+      'date': Timestamp.fromDate(date),
+      'paymentMethod': paymentMethod,
+      'paymentStatus': paymentStatus,
+      'recipientName': recipientName,
+      'recipientPhone': recipientPhone,
+      'deliveryLatitude': deliveryLatitude,
+      'deliveryLongitude': deliveryLongitude,
+      'destinationLatitude': destinationLatitude,
+      'destinationLongitude': destinationLongitude,
+      'deliveryNotes': deliveryNotes,
+      'driverId': driverId,
+      'driverName': driverName,
+      'assignedAt': assignedAt == null
+          ? null
+          : Timestamp.fromDate(assignedAt!),
+      'pickedUpAt': pickedUpAt == null
+          ? null
+          : Timestamp.fromDate(pickedUpAt!),
+      'onTheWayAt': onTheWayAt == null
+          ? null
+          : Timestamp.fromDate(onTheWayAt!),
+      'deliveredAt': deliveredAt == null
+          ? null
+          : Timestamp.fromDate(deliveredAt!),
+      'products': products.map((cartItem) {
+        return {
+          'cartItemId': cartItem.cartItemId,
+          'quantity': cartItem.quantity,
+          'selectedColor': cartItem.selectedColor,
+          'selectedSize': cartItem.selectedSize,
+          'product': cartItem.product.toJson(),
+        };
+      }).toList(),
+    };
   }
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -143,16 +158,20 @@ class OrderModel {
 
     final products = productsJson.map((item) {
       final itemMap = Map<String, dynamic>.from(item as Map);
+
       final productJson = Map<String, dynamic>.from(
         itemMap['product'] as Map? ?? {},
       );
+
       final product = ProductModel.fromJson(productJson);
+
       return CartItemModel.fromJson(
         product: product,
         json: itemMap,
         cartItemId: itemMap['cartItemId']?.toString() ?? '',
       );
     }).toList();
+
     return OrderModel(
       id: json['id']?.toString() ?? '',
       userId: json['userId']?.toString() ?? '',
@@ -163,13 +182,21 @@ class OrderModel {
       date: _parseDate(json['date']),
       paymentMethod: json['paymentMethod']?.toString() ?? '',
       paymentStatus: json['paymentStatus']?.toString() ?? 'unpaid',
-
       recipientName: json['recipientName']?.toString() ?? '',
       recipientPhone: json['recipientPhone']?.toString() ?? '',
-      deliveryLatitude: _toNullableDouble(json['deliveryLatitude']),
-      deliveryLongitude: _toNullableDouble(json['deliveryLongitude']),
+      deliveryLatitude: _toNullableDouble(
+        json['deliveryLatitude'],
+      ),
+      deliveryLongitude: _toNullableDouble(
+        json['deliveryLongitude'],
+      ),
+      destinationLatitude: _toNullableDouble(
+        json['destinationLatitude'],
+      ),
+      destinationLongitude: _toNullableDouble(
+        json['destinationLongitude'],
+      ),
       deliveryNotes: json['deliveryNotes']?.toString(),
-
       driverId: json['driverId']?.toString(),
       driverName: json['driverName']?.toString(),
       assignedAt: _parseNullableDate(json['assignedAt']),
@@ -188,7 +215,10 @@ class OrderModel {
       return value;
     }
 
-    return DateTime.tryParse(value?.toString() ?? '') ?? DateTime.now();
+    return DateTime.tryParse(
+          value?.toString() ?? '',
+        ) ??
+        DateTime.now();
   }
 
   static DateTime? _parseNullableDate(dynamic value) {
@@ -212,7 +242,10 @@ class OrderModel {
       return value.toDouble();
     }
 
-    return double.tryParse(value?.toString() ?? '') ?? 0.0;
+    return double.tryParse(
+          value?.toString() ?? '',
+        ) ??
+        0.0;
   }
 
   static double? _toNullableDouble(dynamic value) {

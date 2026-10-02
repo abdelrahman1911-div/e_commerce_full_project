@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:e_commerce_full_project/core/helpers/cloudinaryservice/cloudinary_service.dart';
+import 'package:e_commerce_full_project/core/services/routing_services.dart';
 import 'package:e_commerce_full_project/features/Categoriesscreen/data/repos/category_repo_impl.dart';
 import 'package:e_commerce_full_project/features/Categoriesscreen/domain/repo/category_repo.dart';
 import 'package:e_commerce_full_project/features/auth/data/repos/auth_repo_impl.dart';
@@ -13,10 +15,15 @@ import 'package:e_commerce_full_project/features/home/mycart/domain/cart_repo.da
 import 'package:e_commerce_full_project/features/home/product/data/repo/prod_repo_impl.dart';
 import 'package:e_commerce_full_project/features/home/product/domain/prod_repo.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/repo/order_repo_impl.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/data/repo/routing_repo_impl.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/domain/order_repo.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/domain/routing_repo.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/driver_location_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+final Dio dio = Dio();  
+final RoutingService routingServices = RoutingService(dio);  
+final RoutingRepo routingRepo =
+    RoutingRepoImpl(routingServices);
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance; 
 final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance; 
 final BrandRepository brandRepository = BrandRepositoryImpl(firebaseFirestore,); 

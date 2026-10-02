@@ -145,9 +145,6 @@ class OrderCard extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              // =========================
-              // TOTAL
-              // =========================
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

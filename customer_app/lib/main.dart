@@ -18,6 +18,7 @@ import 'package:e_commerce_full_project/features/home/profile/presentation/cubit
 import 'package:e_commerce_full_project/features/search/presentation/cubit/search_cubit.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/driver_location_cubit.dart';
 import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/order_cubit.dart';
+import 'package:e_commerce_full_project/features/settingscreen/Myorders/presentation/cubit/routing_cubit.dart';
 import 'package:e_commerce_full_project/features/settingscreen/PaymentPerf/cubit/payment_preference_services.dart';
 import 'package:e_commerce_full_project/firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -80,7 +81,10 @@ Future<void> main() async {
             create: (_) => OrderCubit(
               InjectionContainer.orderRepo,
             )..getOrders(),
-          ),
+          ), 
+          BlocProvider<RoutingCubit>
+          (create: (_) => RoutingCubit(InjectionContainer.routingRepo)
+          ), 
           BlocProvider<PaymentPreferenceCubit>(
             create: (_) => PaymentPreferenceCubit(),
           ),
