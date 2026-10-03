@@ -20,13 +20,63 @@ class LiveDriverMap extends StatefulWidget {
   State<LiveDriverMap> createState() => _LiveDriverMapState();
 }
 
-class _LiveDriverMapState extends State<LiveDriverMap> {
+class _LiveDriverMapState extends State<LiveDriverMap>
+    with SingleTickerProviderStateMixin {
   late final MapController _mapController;
+  late final AnimationController _animationController;
+
+  late LatLng _displayedPosition;
+  LatLng? _animationStart;
+  LatLng? _animationEnd;
+
+  bool _hasCenteredOnce = false;
 
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
+
+    _displayedPosition = LatLng(
+      widget.location.latitude,
+      widget.location.longitude,
+    );
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..addListener(_onAnimationTick);
+  }
+
+  void _onAnimationTick() {
+    if (_animationStart == null || _animationEnd == null) return;
+
+    final t = Curves.easeInOut.transform(_animationController.value);
+
+    final lat = _lerp(
+      _animationStart!.latitude,
+      _animationEnd!.latitude,
+      t,
+    );
+    final lng = _lerp(
+      _animationStart!.longitude,
+      _animationEnd!.longitude,
+      t,
+    );
+
+    final newPosition = LatLng(lat, lng);
+
+    setState(() {
+      _displayedPosition = newPosition;
+    });
+
+    // Keep the camera following the animated marker smoothly.
+    if (_hasCenteredOnce) {
+      _mapController.move(newPosition, _mapController.camera.zoom);
+    }
+  }
+
+  double _lerp(double start, double end, double t) {
+    return start + (end - start) * t;
   }
 
   @override
@@ -39,23 +89,32 @@ class _LiveDriverMapState extends State<LiveDriverMap> {
         widget.location.longitude,
       );
 
-      _mapController.move(
-        newPosition,
-        _mapController.camera.zoom,
-      );
+      _animationStart = _displayedPosition;
+      _animationEnd = newPosition;
+
+      _animationController
+        ..reset()
+        ..forward();
     }
   }
 
   @override
+  void dispose() {
+    _animationController
+      ..removeListener(_onAnimationTick)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final driverPosition = LatLng(
-      widget.location.latitude,
-      widget.location.longitude,
-    );
+    if (!_hasCenteredOnce) {
+      _hasCenteredOnce = true;
+    }
 
     final markers = <Marker>[
       Marker(
-        point: driverPosition,
+        point: _displayedPosition,
         width: 50,
         height: 50,
         child: Container(
@@ -109,7 +168,7 @@ class _LiveDriverMapState extends State<LiveDriverMap> {
         child: FlutterMap(
           mapController: _mapController,
           options: MapOptions(
-            initialCenter: driverPosition,
+            initialCenter: _displayedPosition,
             initialZoom: 15,
           ),
           children: [

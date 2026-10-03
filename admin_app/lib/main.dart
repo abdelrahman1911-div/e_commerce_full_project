@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_admin/core/di/injection_container.dart';
 import 'package:e_commerce_admin/core/router/app_router_configuration.dart';
